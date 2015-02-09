@@ -1,0 +1,16 @@
+li.active {
+    font-weight: bold !important;
+}
+
+li.active li {
+    font-weight: normal;
+}
+
+.affix {
+    top: 160px;
+}
+
+.affix,
+.affix-top {
+    min-width: 250px;
+}

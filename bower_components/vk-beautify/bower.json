@@ -1,0 +1,23 @@
+{
+  "name": "vk-beautify",
+  "version": "0.0.1",
+  "authors": [
+    "Stanley Gu <stanleygu@gmail.com>"
+  ],
+  "description": "XML, JSON, CSS, and SQL code beautifier for angular",
+  "main": "beautify.js",
+  "keywords": [
+    "beautifier",
+    "angular"
+  ],
+  "license": "Copyright (c) 2012 Vadim Kiryukhin",
+  "homepage": "https://github.com/stanleygu/vk-beautify",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ]
+}

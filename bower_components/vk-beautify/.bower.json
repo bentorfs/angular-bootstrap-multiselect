@@ -1,0 +1,32 @@
+{
+  "name": "vk-beautify",
+  "authors": [
+    "Stanley Gu <stanleygu@gmail.com>"
+  ],
+  "description": "XML, JSON, CSS, and SQL code beautifier for angular",
+  "main": "beautify.js",
+  "keywords": [
+    "beautifier",
+    "angular"
+  ],
+  "license": "Copyright (c) 2012 Vadim Kiryukhin",
+  "homepage": "https://github.com/stanleygu/vk-beautify",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "3cb10c4172",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "3cb10c4172d56f1027373ce09ac161afd5c53350"
+  },
+  "_source": "https://github.com/stanleygu/vk-beautify.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/stanleygu/vk-beautify.git",
+  "_direct": true
+}

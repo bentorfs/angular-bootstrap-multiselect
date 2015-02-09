@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="btorfs.multiselect.docs">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Angular Bootstrap Multiselect</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+</head>
+<body style="position: relative;" data-spy="scroll" data-target=".navbar" ng-controller="DocsController">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-right">
+            <a class="navbar-brand" href="https://github.com/bentorfs/angular-bootstrap-multiselect">Source Code on
+                GitHub</a>
+        </div>
+    </div>
+</nav>
+
+<div class="jumbotron" style="margin-top: 50px">
+    <div class="container">
+        <h1>Angular Bootstrap Multiselect</h1>
+
+        <div class="row">
+            <div class="col-sm-3" style="margin-top: 20px">
+                <multiselect ng-model="selection" options="options" show-search="true" show-select-all="true"
+                             show-unselect-all="true"></multiselect>
+            </div>
+            <div class="col-sm-8 col-sm-offset-1">
+                <h3>Features</h3>
+                <ul>
+                    <li>No dependencies</li>
+                    <li>Support big datasets</li>
+                    <li>String or object model values</li>
+                    <li>Works with form validation</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin-top: 50px">
+    <div class="row">
+        <div class="col-md-10">
+
+            <section id="usage">
+                <div class="page-header">
+                    <h2>Usage</h2>
+                </div>
+
+                <h4>Install using Bower:</h4>
+                <pre>bower install https://github.com/bentorfs/angular-bootstrap-multiselect.git --save-dev</pre>
+                <br/>
+
+                <h4>Import javascript</h4>
+                <pre>{{embed | prettyprint}}</pre>
+                <br/>
+
+                <h4>Add module to angular application</h4>
+                <pre>var app = angular.module('myApp', ['btorfs.multiselect']);</pre>
+                <br/>
+            </section>
+
+            <section id="examples">
+                <div class="page-header">
+                    <h2>Examples</h2>
+                </div>
+
+                <section id="example-basic">
+                    <h4>Basic</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection1"
+             options="options">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection1" options="options"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>Options: {{options | prettyprint}}</pre>
+                            <pre>Model: {{selection1 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <hr/>
+
+                <section id="example-search">
+                    <h4>Search box</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection"
+             options="options"
+             show-search="true">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection2" options="options" show-search="true"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>Options: {{options | prettyprint}}</pre>
+                            <pre>Model: {{selection2 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <hr/>
+
+                <section id="example-selectall">
+                    <h4>Select/Unselect all</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection3"
+             options="options"
+             show-select-all="true"
+             show-unselect-all="true">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection3" options="options" show-select-all="true"
+                                         show-unselect-all="true"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>Options: {{options | prettyprint}}</pre>
+                            <pre>Model: {{selection3 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <hr/>
+
+                <section id="example-selectionlimit">
+                    <h4>Selection Limit</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection4"
+             options="options"
+             selection-limit="2">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection4" options="options" selection-limit="2"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>Options: {{options | prettyprint}}</pre>
+                            <pre>Model: {{selection4 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <hr/>
+
+                <section id="example-searchlimit">
+                    <h4>Limited search results</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection5"
+             options="options"
+             show-search="true"
+             search-limit="3">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection5" options="options" show-search="true"
+                                         search-limit="3"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>Options: {{options2 | prettyprint}}</pre>
+                            <pre>Model: {{selection5 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <hr/>
+
+                <section id="example-objects">
+                    <h4>Objects as model</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+ <multiselect ng-model="selection6"
+              options="options2"
+              id-prop="id"
+              display-prop="name">
+ </multiselect>
+                            </span>
+                            <multiselect ng-model="selection6" options="options2" id-prop="id"
+                                         display-prop="name"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>Options: {{options2 | prettyprint}}</pre>
+                            <pre>Model: {{selection6 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <hr/>
+
+                <section id="example-largedatasets">
+                    <h4>Large Datasets</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection7"
+             options="options3"
+             show-search="true"
+             id-prop="id"
+             display-prop="name"
+             search-limit="10">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection7" options="options3" show-search="true" id-prop="id"
+                                         display-prop="name" search-limit="10"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>Options: List of 100 000 objects</pre>
+                            <pre>Model: {{selection7 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </div>
+        <div class="col-md-2 hidden-sm">
+            <div class="navbar" id="navbar">
+                <ul role="tablist" data-spy="affix" data-offset-top="250" class="list-group">
+
+                    <li class="list-group-item"><a href="#usage">Usage</a></li>
+                    <li class="list-group-item"><a href="#examples">Examples</a>
+
+                        <ul role="tablist">
+                            <li><a href="#example-basic">Basic</a></li>
+                            <li><a href="#example-search">Search</a></li>
+                            <li><a href="#example-selectall">Select All/None</a></li>
+                            <li><a href="#example-selectionlimit">Selection Limit</a></li>
+                            <li><a href="#example-searchlimit">Search Limit</a></li>
+                            <li><a href="#example-objects">Objects as model</a></li>
+                            <li><a href="#example-largedatasets">Large Datasets</a></li>
+                        </ul>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-highlightjs/build/angular-highlightjs.min.js"></script>
+<script src="bower_components/vk-beautify/beautify.js"></script>
+<script src="bower_components/lodash/lodash.js"></script>
+<script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
