@@ -13,6 +13,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-protractor-runner');
     grunt.loadNpmTasks('grunt-bootlint');
     grunt.loadNpmTasks('grunt-ng-annotate');
+    grunt.loadNpmTasks('grunt-bump');
 
     // Project configuration.
     grunt.initConfig({
@@ -124,6 +125,15 @@ module.exports = function (grunt) {
                 }
             },
             run: {}
+        },
+
+        bump: {
+            options: {
+                files: ['package.json', 'bower.json'],
+                commitFiles: ['package.json', 'bower.json'],
+                tagName: '%VERSION%',
+                pushTo: 'origin'
+            }
         }
 
     });
