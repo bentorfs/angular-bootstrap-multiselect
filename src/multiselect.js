@@ -13,7 +13,7 @@
         }, object)
     };
 
-    multiselect.directive('multiselect', function ($filter, $document) {
+    multiselect.directive('multiselect', function ($filter, $document, $log) {
         return {
             restrict: 'AE',
             scope: {
@@ -145,7 +145,12 @@
                     if (angular.isString(item)) {
                         return item;
                     } else if (angular.isObject(item)) {
-                        return multiselect.getRecursiveProperty(item, $scope.idProp);
+                        if ($scope.idProp) {
+                            return multiselect.getRecursiveProperty(item, $scope.idProp);
+                        } else {
+                            $log.error('Multiselect: when using objects as model, a idProp value is mandatory.');
+                            return '';
+                        }
                     } else {
                         return item;
                     }
@@ -155,7 +160,12 @@
                     if (angular.isString(item)) {
                         return item;
                     } else if (angular.isObject(item)) {
-                        return multiselect.getRecursiveProperty(item, $scope.displayProp);
+                        if ($scope.displayProp) {
+                            return multiselect.getRecursiveProperty(item, $scope.displayProp);
+                        } else {
+                            $log.error('Multiselect: when using objects as model, a displayProp value is mandatory.');
+                            return '';
+                        }
                     } else {
                         return item;
                     }

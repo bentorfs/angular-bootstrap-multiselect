@@ -13,7 +13,7 @@
         }, object)
     };
 
-    multiselect.directive('multiselect', ['$filter', '$document', function ($filter, $document) {
+    multiselect.directive('multiselect', ['$filter', '$document', '$log', function ($filter, $document, $log) {
         return {
             restrict: 'AE',
             scope: {
@@ -145,7 +145,12 @@
                     if (angular.isString(item)) {
                         return item;
                     } else if (angular.isObject(item)) {
-                        return multiselect.getRecursiveProperty(item, $scope.idProp);
+                        if ($scope.idProp) {
+                            return multiselect.getRecursiveProperty(item, $scope.idProp);
+                        } else {
+                            $log.error('Multiselect: when using objects as model, a idProp value is mandatory.');
+                            return '';
+                        }
                     } else {
                         return item;
                     }
@@ -155,7 +160,12 @@
                     if (angular.isString(item)) {
                         return item;
                     } else if (angular.isObject(item)) {
-                        return multiselect.getRecursiveProperty(item, $scope.displayProp);
+                        if ($scope.displayProp) {
+                            return multiselect.getRecursiveProperty(item, $scope.displayProp);
+                        } else {
+                            $log.error('Multiselect: when using objects as model, a displayProp value is mandatory.');
+                            return '';
+                        }
                     } else {
                         return item;
                     }
@@ -242,7 +252,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "\n" +
     "        <li ng-show=\"showSearch\" class=\"divider\"></li>\n" +
     "        <li role=\"presentation\" ng-repeat=\"option in unselectedOptions | filter:search() | limitTo: searchLimit\"\n" +
-    "            ng-if=\"!isSelected(option)\" ng-class=\"{disabled : selectedOptions.length >= selectionLimit}\">\n" +
+    "            ng-if=\"!isSelected(option)\" ng-class=\"{disabled : selectionLimit && selectedOptions.length >= selectionLimit}\">\n" +
     "            <a class=\"item-unselected\" href=\"\" ng-click=\"toggleItem(option); $event.stopPropagation()\">\n" +
     "                {{getDisplay(option)}}\n" +
     "            </a>\n" +

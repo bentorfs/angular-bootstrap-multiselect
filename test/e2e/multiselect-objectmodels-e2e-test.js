@@ -1,11 +1,11 @@
-describe('Multiselect, using string models, ', function () {
+describe('Multiselect, using object models, ', function () {
 
     beforeEach(function () {
 
     });
 
     it('should be able to select multiple elements', function () {
-        browser.get('test/e2e/test-stringvalues.html');
+        browser.get('test/e2e/test-objectmodels.html');
 
         var form = element(by.name('minimalTest'));
         form.element(by.className('dropdown-toggle')).click();
@@ -28,7 +28,7 @@ describe('Multiselect, using string models, ', function () {
     });
 
     it('should be able to unselect elements', function () {
-        browser.get('test/e2e/test-stringvalues.html');
+        browser.get('test/e2e/test-objectmodels.html');
 
         var form = element(by.name('minimalTest'));
         form.element(by.className('dropdown-toggle')).click();
@@ -51,7 +51,7 @@ describe('Multiselect, using string models, ', function () {
     });
 
     it('has a button to select and unselect everything at once', function () {
-        browser.get('test/e2e/test-stringvalues.html');
+        browser.get('test/e2e/test-objectmodels.html');
 
         var form = element(by.name('allOptionsTest'));
         form.element(by.className('dropdown-toggle')).click();
@@ -80,7 +80,7 @@ describe('Multiselect, using string models, ', function () {
     });
 
     it('cannot select more than the selection limit', function () {
-        browser.get('test/e2e/test-stringvalues.html');
+        browser.get('test/e2e/test-objectmodels.html');
 
         var form = element(by.name('selectionLimitTest'));
         form.element(by.className('dropdown-toggle')).click();
