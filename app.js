@@ -26,7 +26,7 @@
         ];
 
         $scope.options3 = [];
-        _.forEach(_.range(0, 10000), function (number) {
+        _.forEach(_.range(0, 100000), function (number) {
             $scope.options3.push({
                 name: 'country' + number,
                 id: number
