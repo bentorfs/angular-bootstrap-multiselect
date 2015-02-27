@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Angular Bootstrap Multiselect Test</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+</head>
+<body ng-app="testApp">
+
+<div class="container" ng-controller="TestController">
+
+    <h3>Test without options</h3>
+
+    <form name="minimalTest">
+        <pre>Model value: {{selection1}}</pre>
+        <multiselect ng-model="selection1" options="options"></multiselect>
+    </form>
+
+    <h3>Test with all options enabled</h3>
+
+    <form name="allOptionsTest">
+        <pre>Model value: {{selection2}}</pre>
+        <multiselect ng-model="selection2" options="options" show-search="true" show-select-all="true"
+                     show-unselect-all="true"></multiselect>
+    </form>
+
+    <h3>Test with required</h3>
+
+    <form name="requiredTest">
+        <pre>Model value: {{selection3}}
+allOptionsTest.$valid: {{allOptionsTest.$valid}}</pre>
+        <multiselect ng-model="selection3" options="options" required></multiselect>
+    </form>
+
+    <h3>Test with selection limit</h3>
+
+    <form name="selectionLimitTest">
+        <pre>Model value: {{selection2}}</pre>
+        <multiselect ng-model="selection2" options="options" selection-limit="2"></multiselect>
+    </form>
+
+    <h3>Test with many items</h3>
+
+    <form name="selectionLimitTest">
+        <pre>Model value: {{selection4}}</pre>
+        <multiselect ng-model="selection4" options="options2" selection-limit="2" show-search="true"></multiselect>
+    </form>
+
+    <h3>Disabled test</h3>
+
+    <form name="disabledTest">
+        <pre>Model value: {{selection5}}</pre>
+        <multiselect ng-model="selection5" options="options" ng-disabled="true"></multiselect>
+        <multiselect ng-model="selection5" options="options" disabled></multiselect>
+        <multiselect ng-model="selection5" options="options" disabled="true"></multiselect>
+        <multiselect ng-model="selection5" options="options" disabled="disabled"></multiselect>
+        <multiselect ng-model="selection5" options="options" disabled="false"></multiselect>
+    </form>
+
+</div>
+
+<script src="../../bower_components/angular/angular.js"></script>
+<script src="../../dist/angular-bootstrap-multiselect.min.js"></script>
+<script>
+    angular.module('testApp', ['btorfs.multiselect']);
+    angular.module('testApp').controller('TestController', ['$scope', function ($scope) {
+        $scope.options = ['element3', 'element2', 'element1', 'element4'];
+        $scope.options2 = [];
+        for (var i = 0; i < 100000; i++) {
+            $scope.options2.push('element' + i);
+        }
+
+    }]);
+</script>
+</body>
+</html>

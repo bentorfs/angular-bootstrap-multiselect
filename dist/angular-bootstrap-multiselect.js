@@ -13,7 +13,7 @@
         }, object)
     };
 
-    multiselect.directive('multiselect', ['$filter', '$document', function ($filter, $document) {
+    multiselect.directive('multiselect', ['$filter', '$document', '$log', function ($filter, $document, $log) {
         return {
             restrict: 'AE',
             scope: {
@@ -24,7 +24,9 @@
                 selectionLimit: '=?',
                 showSelectAll: '=?',
                 showUnselectAll: '=?',
-                showSearch: '=?'
+                showSearch: '=?',
+                searchFilter: '=?',
+                disabled: '=?ngDisabled'
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
@@ -33,6 +35,14 @@
                 $scope.searchLimit = $scope.searchLimit || 25;
 
                 $scope.searchFilter = '';
+
+                if (typeof $scope.options !== 'function') {
+                    $scope.resolvedOptions = $scope.options;
+                }
+
+                if (typeof $attrs.disabled != 'undefined') {
+                    $scope.disabled = true;
+                }
 
                 $scope.toggleDropdown = function () {
                     $scope.open = !$scope.open;
@@ -48,12 +58,35 @@
 
                 $document.on('click', closeHandler);
 
+                var updateSelectionLists = function () {
+                    if (!$ngModelCtrl.$viewValue) {
+                        if ($scope.selectedOptions) {
+                            $scope.selectedOptions = [];
+                        }
+                        $scope.unselectedOptions = angular.copy($scope.resolvedOptions);
+                    } else {
+                        $scope.selectedOptions = $scope.resolvedOptions.filter(function (el) {
+                            var id = $scope.getId(el);
+                            for (var i = 0; i < $ngModelCtrl.$viewValue.length; i++) {
+                                var selectedId = $scope.getId($ngModelCtrl.$viewValue[i]);
+                                if (id === selectedId) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        });
+                        $scope.unselectedOptions = $scope.resolvedOptions.filter(function (el) {
+                            return $scope.selectedOptions.indexOf(el) < 0;
+                        });
+                    }
+                };
+
                 $ngModelCtrl.$render = function () {
-                    $scope.selection = $ngModelCtrl.$viewValue;
+                    updateSelectionLists();
                 };
 
                 $ngModelCtrl.$viewChangeListeners.push(function () {
-                    $scope.selection = $ngModelCtrl.$viewValue;
+                    updateSelectionLists();
                 });
 
                 $ngModelCtrl.$isEmpty = function (value) {
@@ -64,8 +97,8 @@
                     }
                 };
 
-                var watcher = $scope.$watch('selection', function () {
-                    $ngModelCtrl.$setViewValue(angular.copy($scope.selection));
+                var watcher = $scope.$watch('selectedOptions', function () {
+                    $ngModelCtrl.$setViewValue(angular.copy($scope.selectedOptions));
                 }, true);
 
                 $scope.$on('$destroy', function () {
@@ -76,12 +109,12 @@
                 });
 
                 $scope.getButtonText = function () {
-                    if ($scope.selection && $scope.selection.length === 1) {
-                        return $scope.getDisplay($scope.selection[0]);
+                    if ($scope.selectedOptions && $scope.selectedOptions.length === 1) {
+                        return $scope.getDisplay($scope.selectedOptions[0]);
                     }
-                    if ($scope.selection && $scope.selection.length > 1) {
+                    if ($scope.selectedOptions && $scope.selectedOptions.length > 1) {
                         var totalSelected;
-                        totalSelected = angular.isDefined($scope.selection) ? $scope.selection.length : 0;
+                        totalSelected = angular.isDefined($scope.selectedOptions) ? $scope.selectedOptions.length : 0;
                         if (totalSelected === 0) {
                             return 'Select';
                         } else {
@@ -93,29 +126,28 @@
                 };
 
                 $scope.selectAll = function () {
-                    $scope.unselectAll();
-                    angular.forEach($scope.options, function (value) {
-                        $scope.toggleItem(value);
-                    });
+                    $scope.selectedOptions = $scope.resolvedOptions;
+                    $scope.unselectedOptions = [];
                 };
 
                 $scope.unselectAll = function () {
-                    $scope.selection = [];
+                    $scope.selectedOptions = [];
+                    $scope.unselectedOptions = $scope.resolvedOptions;
                 };
 
                 $scope.toggleItem = function (item) {
-                    if (typeof $scope.selection === 'undefined') {
-                        $scope.selection = [];
+                    if (typeof $scope.selectedOptions === 'undefined') {
+                        $scope.selectedOptions = [];
                     }
-                    var index = $scope.selection.indexOf(item);
-                    var exists = index !== -1;
-                    if (exists) {
-                        $scope.selection.splice(index, 1);
-                    } else if (!exists && ($scope.selectionLimit === 0 || $scope.selection.length < $scope.selectionLimit)) {
-                        if (!angular.isDefined($scope.selection) || $scope.selection == null) {
-                            $scope.selection = [];
-                        }
-                        $scope.selection.push(item);
+                    var selectedIndex = $scope.selectedOptions.indexOf(item);
+                    var currentlySelected = (selectedIndex !== -1);
+                    if (currentlySelected) {
+                        $scope.unselectedOptions.push($scope.selectedOptions[selectedIndex]);
+                        $scope.selectedOptions.splice(selectedIndex, 1);
+                    } else if (!currentlySelected && ($scope.selectionLimit === 0 || $scope.selectedOptions.length < $scope.selectionLimit)) {
+                        var unselectedIndex = $scope.unselectedOptions.indexOf(item);
+                        $scope.unselectedOptions.splice(unselectedIndex, 1);
+                        $scope.selectedOptions.push(item);
                     }
                 };
 
@@ -123,7 +155,12 @@
                     if (angular.isString(item)) {
                         return item;
                     } else if (angular.isObject(item)) {
-                        return multiselect.getRecursiveProperty(item, $scope.idProp);
+                        if ($scope.idProp) {
+                            return multiselect.getRecursiveProperty(item, $scope.idProp);
+                        } else {
+                            $log.error('Multiselect: when using objects as model, a idProp value is mandatory.');
+                            return '';
+                        }
                     } else {
                         return item;
                     }
@@ -133,20 +170,38 @@
                     if (angular.isString(item)) {
                         return item;
                     } else if (angular.isObject(item)) {
-                        return multiselect.getRecursiveProperty(item, $scope.displayProp);
+                        if ($scope.displayProp) {
+                            return multiselect.getRecursiveProperty(item, $scope.displayProp);
+                        } else {
+                            $log.error('Multiselect: when using objects as model, a displayProp value is mandatory.');
+                            return '';
+                        }
                     } else {
                         return item;
                     }
                 };
 
                 $scope.isSelected = function (item) {
-                    var result = false;
-                    angular.forEach($scope.selection, function (selectedElement) {
-                        if ($scope.getId(selectedElement) === $scope.getId(item)) {
-                            result = true;
+                    if (!$scope.selectedOptions) {
+                        return false;
+                    }
+                    var itemId = $scope.getId(item);
+                    for (var i = 0; i < $scope.selectedOptions.length; i++) {
+                        var selectedElement = $scope.selectedOptions[i];
+                        if ($scope.getId(selectedElement) === itemId) {
+                            return true;
                         }
-                    });
-                    return result;
+                    }
+                    return false;
+                };
+
+                $scope.updateOptions = function () {
+                    if (typeof $scope.options === 'function') {
+                        $scope.options().then(function (resolvedOptions) {
+                            $scope.resolvedOptions = resolvedOptions;
+                            updateSelectionLists();
+                        });
+                    }
                 };
 
                 // This search function is optimized to take into account the search limit.
@@ -180,8 +235,9 @@ angular.module('btorfs.multiselect.templates', ['multiselect.html']);
 angular.module("multiselect.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("multiselect.html",
     "<div class=\"btn-group\" style=\"width: 100%\">\n" +
-    "    <button type=\"button\" class=\"form-control btn btn-default btn-block dropdown-toggle\" ng-click=\"toggleDropdown()\">\n" +
-    "        {{getButtonText()}}&nbsp;<span class=\"caret\"></span></button>\n" +
+    "    <button type=\"button\" class=\"form-control btn btn-default btn-block dropdown-toggle\" ng-click=\"toggleDropdown()\" ng-disabled=\"disabled\">\n" +
+    "        {{getButtonText()}}&nbsp;<span class=\"caret\"></span>\n" +
+    "    </button>\n" +
     "    <ul class=\"dropdown-menu dropdown-menu-form\"\n" +
     "        ng-style=\"{display: open ? 'block' : 'none'}\" style=\"width: 100%; overflow-x: auto\">\n" +
     "\n" +
@@ -199,24 +255,25 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "            class=\"divider\">\n" +
     "        </li>\n" +
     "\n" +
-    "        <li role=\"presentation\" ng-repeat=\"option in selection\" class=\"active\">\n" +
+    "        <li role=\"presentation\" ng-repeat=\"option in selectedOptions\" class=\"active\">\n" +
     "            <a class=\"item-selected\" href=\"\" ng-click=\"toggleItem(option); $event.stopPropagation()\">\n" +
     "                <span class=\"glyphicon glyphicon-remove\"></span>\n" +
     "                {{getDisplay(option)}}\n" +
     "            </a>\n" +
     "        </li>\n" +
-    "        <li ng-show=\"selection.length > 0\" class=\"divider\"></li>\n" +
+    "        <li ng-show=\"selectedOptions.length > 0\" class=\"divider\"></li>\n" +
     "\n" +
     "        <li ng-show=\"showSearch\">\n" +
     "            <div class=\"dropdown-header\">\n" +
     "                <input type=\"text\" class=\"form-control input-sm\" style=\"width: 100%;\"\n" +
-    "                       ng-model=\"searchFilter\" placeholder=\"Search...\"/>\n" +
+    "                       ng-model=\"searchFilter\" placeholder=\"Search...\" ng-change=\"updateOptions()\"/>\n" +
     "            </div>\n" +
     "        </li>\n" +
     "\n" +
     "        <li ng-show=\"showSearch\" class=\"divider\"></li>\n" +
-    "        <li role=\"presentation\" ng-repeat=\"option in options | filter:search() | limitTo: searchLimit\"\n" +
-    "            ng-if=\"!isSelected(option)\">\n" +
+    "        <li role=\"presentation\" ng-repeat=\"option in unselectedOptions | filter:search() | limitTo: searchLimit\"\n" +
+    "            ng-if=\"!isSelected(option)\"\n" +
+    "            ng-class=\"{disabled : selectionLimit && selectedOptions.length >= selectionLimit}\">\n" +
     "            <a class=\"item-unselected\" href=\"\" ng-click=\"toggleItem(option); $event.stopPropagation()\">\n" +
     "                {{getDisplay(option)}}\n" +
     "            </a>\n" +
@@ -224,7 +281,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "\n" +
     "        <li class=\"divider\" ng-show=\"selectionLimit > 1\"></li>\n" +
     "        <li role=\"presentation\" ng-show=\"selectionLimit > 1\">\n" +
-    "            <a>{{selection.length || 0}} / {{selectionLimit}} selected</a>\n" +
+    "            <a>{{selectedOptions.length || 0}} / {{selectionLimit}} selected</a>\n" +
     "        </li>\n" +
     "\n" +
     "    </ul>\n" +

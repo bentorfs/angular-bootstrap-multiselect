@@ -13,14 +13,15 @@
 
     <form name="minimalTest">
         <pre>Model value: {{selection1}}</pre>
-        <multiselect ng-model="selection1" options="options"></multiselect>
+        <multiselect ng-model="selection1" options="options" display-prop="name" id-prop="id"></multiselect>
     </form>
 
     <h3>Test with all options enabled</h3>
 
     <form name="allOptionsTest">
         <pre>Model value: {{selection2}}</pre>
-        <multiselect ng-model="selection2" options="options" show-search="true" show-select-all="true" ,
+        <multiselect ng-model="selection2" options="options" display-prop="name" id-prop="id" show-search="true"
+                     show-select-all="true"
                      show-unselect-all="true"></multiselect>
     </form>
 
@@ -29,14 +30,23 @@
     <form name="requiredTest">
         <pre>Model value: {{selection3}}
 allOptionsTest.$valid: {{allOptionsTest.$valid}}</pre>
-        <multiselect ng-model="selection3" options="options" required></multiselect>
+        <multiselect ng-model="selection3" options="options" display-prop="name" id-prop="id" required></multiselect>
     </form>
 
     <h3>Test with selection limit</h3>
 
     <form name="selectionLimitTest">
         <pre>Model value: {{selection2}}</pre>
-        <multiselect ng-model="selection2" options="options" selection-limit="2"></multiselect>
+        <multiselect ng-model="selection2" options="options" display-prop="name" id-prop="id"
+                     selection-limit="2"></multiselect>
+    </form>
+
+    <h3>Test with many items</h3>
+
+    <form name="selectionLimitTest">
+        <pre>Model value: {{selection4}}</pre>
+        <multiselect ng-model="selection4" options="options2" display-prop="name" id-prop="id" selection-limit="2"
+                     show-search="true"></multiselect>
     </form>
 
 </div>
@@ -46,7 +56,17 @@ allOptionsTest.$valid: {{allOptionsTest.$valid}}</pre>
 <script>
     angular.module('testApp', ['btorfs.multiselect']);
     angular.module('testApp').controller('TestController', ['$scope', function ($scope) {
-        $scope.options = ['element3', 'element2', 'element1', 'element4'];
+        $scope.options = [
+            {name: 'element3', id: 1},
+            {name: 'element2', id: 2},
+            {name: 'element1', id: 3},
+            {name: 'element4', id: 4}
+        ];
+        $scope.options2 = [];
+        for (var i = 0; i < 10000; i++) {
+            $scope.options2.push({name: 'element' + i, id: i});
+        }
+
     }]);
 </script>
 </body>

@@ -1,6 +1,7 @@
 <div class="btn-group" style="width: 100%">
-    <button type="button" class="form-control btn btn-default btn-block dropdown-toggle" ng-click="toggleDropdown()">
-        {{getButtonText()}}&nbsp;<span class="caret"></span></button>
+    <button type="button" class="form-control btn btn-default btn-block dropdown-toggle" ng-click="toggleDropdown()" ng-disabled="disabled">
+        {{getButtonText()}}&nbsp;<span class="caret"></span>
+    </button>
     <ul class="dropdown-menu dropdown-menu-form"
         ng-style="{display: open ? 'block' : 'none'}" style="width: 100%; overflow-x: auto">
 
@@ -18,24 +19,25 @@
             class="divider">
         </li>
 
-        <li role="presentation" ng-repeat="option in selection" class="active">
+        <li role="presentation" ng-repeat="option in selectedOptions" class="active">
             <a class="item-selected" href="" ng-click="toggleItem(option); $event.stopPropagation()">
                 <span class="glyphicon glyphicon-remove"></span>
                 {{getDisplay(option)}}
             </a>
         </li>
-        <li ng-show="selection.length > 0" class="divider"></li>
+        <li ng-show="selectedOptions.length > 0" class="divider"></li>
 
         <li ng-show="showSearch">
             <div class="dropdown-header">
                 <input type="text" class="form-control input-sm" style="width: 100%;"
-                       ng-model="searchFilter" placeholder="Search..."/>
+                       ng-model="searchFilter" placeholder="Search..." ng-change="updateOptions()"/>
             </div>
         </li>
 
         <li ng-show="showSearch" class="divider"></li>
-        <li role="presentation" ng-repeat="option in options | filter:search() | limitTo: searchLimit"
-            ng-if="!isSelected(option)">
+        <li role="presentation" ng-repeat="option in unselectedOptions | filter:search() | limitTo: searchLimit"
+            ng-if="!isSelected(option)"
+            ng-class="{disabled : selectionLimit && selectedOptions.length >= selectionLimit}">
             <a class="item-unselected" href="" ng-click="toggleItem(option); $event.stopPropagation()">
                 {{getDisplay(option)}}
             </a>
@@ -43,7 +45,7 @@
 
         <li class="divider" ng-show="selectionLimit > 1"></li>
         <li role="presentation" ng-show="selectionLimit > 1">
-            <a>{{selection.length || 0}} / {{selectionLimit}} selected</a>
+            <a>{{selectedOptions.length || 0}} / {{selectionLimit}} selected</a>
         </li>
 
     </ul>
