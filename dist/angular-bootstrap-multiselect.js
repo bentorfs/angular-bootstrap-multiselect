@@ -48,12 +48,35 @@
 
                 $document.on('click', closeHandler);
 
+                var updateSelectionLists = function () {
+                    if (!$ngModelCtrl.$viewValue) {
+                        if ($scope.selectedOptions) {
+                            $scope.selectedOptions = [];
+                        }
+                        $scope.unselectedOptions = angular.copy($scope.options);
+                    } else {
+                        $scope.selectedOptions = $scope.options.filter(function (el) {
+                            var id = $scope.getId(el);
+                            for (var i = 0; i < $ngModelCtrl.$viewValue.length; i++) {
+                                var selectedId = $scope.getId($ngModelCtrl.$viewValue[i]);
+                                if (id === selectedId) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        });
+                        $scope.unselectedOptions = $scope.options.filter(function (el) {
+                            return $scope.selectedOptions.indexOf(el) < 0;
+                        });
+                    }
+                };
+
                 $ngModelCtrl.$render = function () {
-                    $scope.selection = $ngModelCtrl.$viewValue;
+                    updateSelectionLists();
                 };
 
                 $ngModelCtrl.$viewChangeListeners.push(function () {
-                    $scope.selection = $ngModelCtrl.$viewValue;
+                    updateSelectionLists();
                 });
 
                 $ngModelCtrl.$isEmpty = function (value) {
@@ -64,8 +87,8 @@
                     }
                 };
 
-                var watcher = $scope.$watch('selection', function () {
-                    $ngModelCtrl.$setViewValue(angular.copy($scope.selection));
+                var watcher = $scope.$watch('selectedOptions', function () {
+                    $ngModelCtrl.$setViewValue(angular.copy($scope.selectedOptions));
                 }, true);
 
                 $scope.$on('$destroy', function () {
@@ -76,12 +99,12 @@
                 });
 
                 $scope.getButtonText = function () {
-                    if ($scope.selection && $scope.selection.length === 1) {
-                        return $scope.getDisplay($scope.selection[0]);
+                    if ($scope.selectedOptions && $scope.selectedOptions.length === 1) {
+                        return $scope.getDisplay($scope.selectedOptions[0]);
                     }
-                    if ($scope.selection && $scope.selection.length > 1) {
+                    if ($scope.selectedOptions && $scope.selectedOptions.length > 1) {
                         var totalSelected;
-                        totalSelected = angular.isDefined($scope.selection) ? $scope.selection.length : 0;
+                        totalSelected = angular.isDefined($scope.selectedOptions) ? $scope.selectedOptions.length : 0;
                         if (totalSelected === 0) {
                             return 'Select';
                         } else {
@@ -93,29 +116,28 @@
                 };
 
                 $scope.selectAll = function () {
-                    $scope.unselectAll();
-                    angular.forEach($scope.options, function (value) {
-                        $scope.toggleItem(value);
-                    });
+                    $scope.selectedOptions = $scope.options;
+                    $scope.unselectedOptions = [];
                 };
 
                 $scope.unselectAll = function () {
-                    $scope.selection = [];
+                    $scope.selectedOptions = [];
+                    $scope.unselectedOptions = $scope.options;
                 };
 
                 $scope.toggleItem = function (item) {
-                    if (typeof $scope.selection === 'undefined') {
-                        $scope.selection = [];
+                    if (typeof $scope.selectedOptions === 'undefined') {
+                        $scope.selectedOptions = [];
                     }
-                    var index = $scope.selection.indexOf(item);
-                    var exists = index !== -1;
-                    if (exists) {
-                        $scope.selection.splice(index, 1);
-                    } else if (!exists && ($scope.selectionLimit === 0 || $scope.selection.length < $scope.selectionLimit)) {
-                        if (!angular.isDefined($scope.selection) || $scope.selection == null) {
-                            $scope.selection = [];
-                        }
-                        $scope.selection.push(item);
+                    var selectedIndex = $scope.selectedOptions.indexOf(item);
+                    var currentlySelected = (selectedIndex !== -1);
+                    if (currentlySelected) {
+                        $scope.unselectedOptions.push($scope.selectedOptions[selectedIndex]);
+                        $scope.selectedOptions.splice(selectedIndex, 1);
+                    } else if (!currentlySelected && ($scope.selectionLimit === 0 || $scope.selectedOptions.length < $scope.selectionLimit)) {
+                        var unselectedIndex = $scope.unselectedOptions.indexOf(item);
+                        $scope.unselectedOptions.splice(unselectedIndex, 1);
+                        $scope.selectedOptions.push(item);
                     }
                 };
 
@@ -140,13 +162,17 @@
                 };
 
                 $scope.isSelected = function (item) {
-                    var result = false;
-                    angular.forEach($scope.selection, function (selectedElement) {
-                        if ($scope.getId(selectedElement) === $scope.getId(item)) {
-                            result = true;
+                    if (!$scope.selectedOptions) {
+                        return false;
+                    }
+                    var itemId = $scope.getId(item);
+                    for (var i = 0; i < $scope.selectedOptions.length; i++) {
+                        var selectedElement = $scope.selectedOptions[i];
+                        if ($scope.getId(selectedElement) === itemId) {
+                            return true;
                         }
-                    });
-                    return result;
+                    }
+                    return false;
                 };
 
                 // This search function is optimized to take into account the search limit.
@@ -199,13 +225,13 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "            class=\"divider\">\n" +
     "        </li>\n" +
     "\n" +
-    "        <li role=\"presentation\" ng-repeat=\"option in selection\" class=\"active\">\n" +
+    "        <li role=\"presentation\" ng-repeat=\"option in selectedOptions\" class=\"active\">\n" +
     "            <a class=\"item-selected\" href=\"\" ng-click=\"toggleItem(option); $event.stopPropagation()\">\n" +
     "                <span class=\"glyphicon glyphicon-remove\"></span>\n" +
     "                {{getDisplay(option)}}\n" +
     "            </a>\n" +
     "        </li>\n" +
-    "        <li ng-show=\"selection.length > 0\" class=\"divider\"></li>\n" +
+    "        <li ng-show=\"selectedOptions.length > 0\" class=\"divider\"></li>\n" +
     "\n" +
     "        <li ng-show=\"showSearch\">\n" +
     "            <div class=\"dropdown-header\">\n" +
@@ -215,7 +241,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "        </li>\n" +
     "\n" +
     "        <li ng-show=\"showSearch\" class=\"divider\"></li>\n" +
-    "        <li role=\"presentation\" ng-repeat=\"option in options | filter:search() | limitTo: searchLimit\"\n" +
+    "        <li role=\"presentation\" ng-repeat=\"option in unselectedOptions | filter:search() | limitTo: searchLimit\"\n" +
     "            ng-if=\"!isSelected(option)\">\n" +
     "            <a class=\"item-unselected\" href=\"\" ng-click=\"toggleItem(option); $event.stopPropagation()\">\n" +
     "                {{getDisplay(option)}}\n" +
@@ -224,7 +250,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "\n" +
     "        <li class=\"divider\" ng-show=\"selectionLimit > 1\"></li>\n" +
     "        <li role=\"presentation\" ng-show=\"selectionLimit > 1\">\n" +
-    "            <a>{{selection.length || 0}} / {{selectionLimit}} selected</a>\n" +
+    "            <a>{{selectedOptions.length || 0}} / {{selectionLimit}} selected</a>\n" +
     "        </li>\n" +
     "\n" +
     "    </ul>\n" +

@@ -18,13 +18,13 @@
             class="divider">
         </li>
 
-        <li role="presentation" ng-repeat="option in selection" class="active">
+        <li role="presentation" ng-repeat="option in selectedOptions" class="active">
             <a class="item-selected" href="" ng-click="toggleItem(option); $event.stopPropagation()">
                 <span class="glyphicon glyphicon-remove"></span>
                 {{getDisplay(option)}}
             </a>
         </li>
-        <li ng-show="selection.length > 0" class="divider"></li>
+        <li ng-show="selectedOptions.length > 0" class="divider"></li>
 
         <li ng-show="showSearch">
             <div class="dropdown-header">
@@ -34,7 +34,7 @@
         </li>
 
         <li ng-show="showSearch" class="divider"></li>
-        <li role="presentation" ng-repeat="option in options | filter:search() | limitTo: searchLimit"
+        <li role="presentation" ng-repeat="option in unselectedOptions | filter:search() | limitTo: searchLimit"
             ng-if="!isSelected(option)">
             <a class="item-unselected" href="" ng-click="toggleItem(option); $event.stopPropagation()">
                 {{getDisplay(option)}}
@@ -43,7 +43,7 @@
 
         <li class="divider" ng-show="selectionLimit > 1"></li>
         <li role="presentation" ng-show="selectionLimit > 1">
-            <a>{{selection.length || 0}} / {{selectionLimit}} selected</a>
+            <a>{{selectedOptions.length || 0}} / {{selectionLimit}} selected</a>
         </li>
 
     </ul>

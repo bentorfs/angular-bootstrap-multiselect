@@ -1,6 +1,6 @@
 'use strict';
 
-describe("The multiselect directive, when using string models, ", function () {
+describe("The multiselect directive, when using string models,", function () {
 
     var $scope;
     var $rootScope;
@@ -18,11 +18,11 @@ describe("The multiselect directive, when using string models, ", function () {
         $scope.options = ['el1', 'el2', 'el3'];
         var element = $compile("<multiselect ng-model='selection' options='options'></multiselect>")($scope);
         $scope.$digest();
-        expect(element.isolateScope().selection).toBeUndefined();
+        expect(element.isolateScope().selectedOptions).toBeUndefined();
 
         element.isolateScope().toggleItem($scope.options[0]);
-        expect(element.isolateScope().selection).toBeDefined();
-        expect(element.isolateScope().selection.length).toBe(1);
+        expect(element.isolateScope().selectedOptions).toBeDefined();
+        expect(element.isolateScope().selectedOptions.length).toBe(1);
     });
 
     it('can toggle items in the selection', function () {
@@ -30,12 +30,15 @@ describe("The multiselect directive, when using string models, ", function () {
         var element = $compile("<multiselect ng-model='selection' options='options'></multiselect>")($scope);
         $scope.$digest();
 
-        element.isolateScope().toggleItem($scope.options[0]);
-        expect(element.isolateScope().selection).toBeDefined();
-        expect(element.isolateScope().selection.length).toBe(1);
+        expect(element.isolateScope().unselectedOptions.length).toBe(3);
+        element.isolateScope().toggleItem(element.isolateScope().unselectedOptions[0]);
+        expect(element.isolateScope().selectedOptions).toBeDefined();
+        expect(element.isolateScope().selectedOptions.length).toBe(1);
+        expect(element.isolateScope().unselectedOptions.length).toBe(2);
 
-        element.isolateScope().toggleItem($scope.options[0]);
-        expect(element.isolateScope().selection.length).toBe(0);
+        element.isolateScope().toggleItem(element.isolateScope().selectedOptions[0]);
+        expect(element.isolateScope().selectedOptions.length).toBe(0);
+        expect(element.isolateScope().unselectedOptions.length).toBe(3);
     });
 
     it('shows a label on the button when no items have been chosen', function () {
@@ -73,10 +76,14 @@ describe("The multiselect directive, when using string models, ", function () {
         element.isolateScope().selectAll();
         $scope.$digest();
         expect($scope.selection.length).toBe(3);
+        expect(element.isolateScope().selectedOptions.length).toBe(3);
+        expect(element.isolateScope().unselectedOptions.length).toBe(0);
 
         element.isolateScope().unselectAll();
         $scope.$digest();
         expect($scope.selection.length).toBe(0);
+        expect(element.isolateScope().selectedOptions.length).toBe(0);
+        expect(element.isolateScope().unselectedOptions.length).toBe(3);
     });
 
     it('knows which items are selected', function () {

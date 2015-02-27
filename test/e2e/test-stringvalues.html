@@ -20,7 +20,7 @@
 
     <form name="allOptionsTest">
         <pre>Model value: {{selection2}}</pre>
-        <multiselect ng-model="selection2" options="options" show-search="true" show-select-all="true" ,
+        <multiselect ng-model="selection2" options="options" show-search="true" show-select-all="true"
                      show-unselect-all="true"></multiselect>
     </form>
 
@@ -39,6 +39,13 @@ allOptionsTest.$valid: {{allOptionsTest.$valid}}</pre>
         <multiselect ng-model="selection2" options="options" selection-limit="2"></multiselect>
     </form>
 
+    <h3>Test with many items</h3>
+
+    <form name="selectionLimitTest">
+        <pre>Model value: {{selection4}}</pre>
+        <multiselect ng-model="selection4" options="options2" selection-limit="2" show-search="true"></multiselect>
+    </form>
+
 </div>
 
 <script src="../../bower_components/angular/angular.js"></script>
@@ -47,6 +54,11 @@ allOptionsTest.$valid: {{allOptionsTest.$valid}}</pre>
     angular.module('testApp', ['btorfs.multiselect']);
     angular.module('testApp').controller('TestController', ['$scope', function ($scope) {
         $scope.options = ['element3', 'element2', 'element1', 'element4'];
+        $scope.options2 = [];
+        for (var i = 0; i < 100000; i++) {
+            $scope.options2.push('element' + i);
+        }
+
     }]);
 </script>
 </body>
