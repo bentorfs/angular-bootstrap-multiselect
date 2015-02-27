@@ -24,7 +24,8 @@
                 selectionLimit: '=?',
                 showSelectAll: '=?',
                 showUnselectAll: '=?',
-                showSearch: '=?'
+                showSearch: '=?',
+                disabled: '=?ngDisabled'
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
@@ -33,6 +34,10 @@
                 $scope.searchLimit = $scope.searchLimit || 25;
 
                 $scope.searchFilter = '';
+
+                if (typeof $attrs.disabled != 'undefined') {
+                    $scope.disabled = true;
+                }
 
                 $scope.toggleDropdown = function () {
                     $scope.open = !$scope.open;
@@ -216,8 +221,9 @@ angular.module('btorfs.multiselect.templates', ['multiselect.html']);
 angular.module("multiselect.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("multiselect.html",
     "<div class=\"btn-group\" style=\"width: 100%\">\n" +
-    "    <button type=\"button\" class=\"form-control btn btn-default btn-block dropdown-toggle\" ng-click=\"toggleDropdown()\">\n" +
-    "        {{getButtonText()}}&nbsp;<span class=\"caret\"></span></button>\n" +
+    "    <button type=\"button\" class=\"form-control btn btn-default btn-block dropdown-toggle\" ng-click=\"toggleDropdown()\" ng-disabled=\"disabled\">\n" +
+    "        {{getButtonText()}}&nbsp;<span class=\"caret\"></span>\n" +
+    "    </button>\n" +
     "    <ul class=\"dropdown-menu dropdown-menu-form\"\n" +
     "        ng-style=\"{display: open ? 'block' : 'none'}\" style=\"width: 100%; overflow-x: auto\">\n" +
     "\n" +
@@ -252,7 +258,8 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "\n" +
     "        <li ng-show=\"showSearch\" class=\"divider\"></li>\n" +
     "        <li role=\"presentation\" ng-repeat=\"option in unselectedOptions | filter:search() | limitTo: searchLimit\"\n" +
-    "            ng-if=\"!isSelected(option)\" ng-class=\"{disabled : selectionLimit && selectedOptions.length >= selectionLimit}\">\n" +
+    "            ng-if=\"!isSelected(option)\"\n" +
+    "            ng-class=\"{disabled : selectionLimit && selectedOptions.length >= selectionLimit}\">\n" +
     "            <a class=\"item-unselected\" href=\"\" ng-click=\"toggleItem(option); $event.stopPropagation()\">\n" +
     "                {{getDisplay(option)}}\n" +
     "            </a>\n" +

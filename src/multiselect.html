@@ -1,6 +1,7 @@
 <div class="btn-group" style="width: 100%">
-    <button type="button" class="form-control btn btn-default btn-block dropdown-toggle" ng-click="toggleDropdown()">
-        {{getButtonText()}}&nbsp;<span class="caret"></span></button>
+    <button type="button" class="form-control btn btn-default btn-block dropdown-toggle" ng-click="toggleDropdown()" ng-disabled="disabled">
+        {{getButtonText()}}&nbsp;<span class="caret"></span>
+    </button>
     <ul class="dropdown-menu dropdown-menu-form"
         ng-style="{display: open ? 'block' : 'none'}" style="width: 100%; overflow-x: auto">
 
@@ -35,7 +36,8 @@
 
         <li ng-show="showSearch" class="divider"></li>
         <li role="presentation" ng-repeat="option in unselectedOptions | filter:search() | limitTo: searchLimit"
-            ng-if="!isSelected(option)" ng-class="{disabled : selectionLimit && selectedOptions.length >= selectionLimit}">
+            ng-if="!isSelected(option)"
+            ng-class="{disabled : selectionLimit && selectedOptions.length >= selectionLimit}">
             <a class="item-unselected" href="" ng-click="toggleItem(option); $event.stopPropagation()">
                 {{getDisplay(option)}}
             </a>

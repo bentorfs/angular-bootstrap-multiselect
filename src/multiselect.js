@@ -24,7 +24,8 @@
                 selectionLimit: '=?',
                 showSelectAll: '=?',
                 showUnselectAll: '=?',
-                showSearch: '=?'
+                showSearch: '=?',
+                disabled: '=?ngDisabled'
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
@@ -33,6 +34,10 @@
                 $scope.searchLimit = $scope.searchLimit || 25;
 
                 $scope.searchFilter = '';
+
+                if (typeof $attrs.disabled != 'undefined') {
+                    $scope.disabled = true;
+                }
 
                 $scope.toggleDropdown = function () {
                     $scope.open = !$scope.open;

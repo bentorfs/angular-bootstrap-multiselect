@@ -46,6 +46,17 @@ allOptionsTest.$valid: {{allOptionsTest.$valid}}</pre>
         <multiselect ng-model="selection4" options="options2" selection-limit="2" show-search="true"></multiselect>
     </form>
 
+    <h3>Disabled test</h3>
+
+    <form name="disabledTest">
+        <pre>Model value: {{selection5}}</pre>
+        <multiselect ng-model="selection5" options="options" ng-disabled="true"></multiselect>
+        <multiselect ng-model="selection5" options="options" disabled></multiselect>
+        <multiselect ng-model="selection5" options="options" disabled="true"></multiselect>
+        <multiselect ng-model="selection5" options="options" disabled="disabled"></multiselect>
+        <multiselect ng-model="selection5" options="options" disabled="false"></multiselect>
+    </form>
+
 </div>
 
 <script src="../../bower_components/angular/angular.js"></script>
