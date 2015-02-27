@@ -63,7 +63,7 @@
                         if ($scope.selectedOptions) {
                             $scope.selectedOptions = [];
                         }
-                        $scope.unselectedOptions = angular.copy($scope.resolvedOptions);
+                        $scope.unselectedOptions = $scope.resolvedOptions.slice(); // Take a copy
                     } else {
                         $scope.selectedOptions = $scope.resolvedOptions.filter(function (el) {
                             var id = $scope.getId(el);

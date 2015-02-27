@@ -52,7 +52,7 @@ allOptionsTest.$valid: {{allOptionsTest.$valid}}</pre>
 </div>
 
 <script src="../../bower_components/angular/angular.js"></script>
-<script src="../../dist/angular-bootstrap-multiselect.min.js"></script>
+<script src="../../dist/angular-bootstrap-multiselect.js"></script>
 <script>
     angular.module('testApp', ['btorfs.multiselect']);
     angular.module('testApp').controller('TestController', ['$scope', function ($scope) {
@@ -63,7 +63,7 @@ allOptionsTest.$valid: {{allOptionsTest.$valid}}</pre>
             {name: 'element4', id: 4}
         ];
         $scope.options2 = [];
-        for (var i = 0; i < 10000; i++) {
+        for (var i = 0; i < 100000; i++) {
             $scope.options2.push({name: 'element' + i, id: i});
         }
 
