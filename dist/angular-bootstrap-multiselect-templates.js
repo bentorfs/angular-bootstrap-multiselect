@@ -34,7 +34,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "        <li ng-show=\"showSearch\">\n" +
     "            <div class=\"dropdown-header\">\n" +
     "                <input type=\"text\" class=\"form-control input-sm\" style=\"width: 100%;\"\n" +
-    "                       ng-model=\"searchFilter\" placeholder=\"Search...\"/>\n" +
+    "                       ng-model=\"searchFilter\" placeholder=\"Search...\" ng-change=\"updateOptions()\"/>\n" +
     "            </div>\n" +
     "        </li>\n" +
     "\n" +

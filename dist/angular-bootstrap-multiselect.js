@@ -25,6 +25,7 @@
                 showSelectAll: '=?',
                 showUnselectAll: '=?',
                 showSearch: '=?',
+                searchFilter: '=?',
                 disabled: '=?ngDisabled'
             },
             require: 'ngModel',
@@ -34,6 +35,10 @@
                 $scope.searchLimit = $scope.searchLimit || 25;
 
                 $scope.searchFilter = '';
+
+                if (typeof $scope.options !== 'function') {
+                    $scope.resolvedOptions = $scope.options;
+                }
 
                 if (typeof $attrs.disabled != 'undefined') {
                     $scope.disabled = true;
@@ -58,9 +63,9 @@
                         if ($scope.selectedOptions) {
                             $scope.selectedOptions = [];
                         }
-                        $scope.unselectedOptions = angular.copy($scope.options);
+                        $scope.unselectedOptions = angular.copy($scope.resolvedOptions);
                     } else {
-                        $scope.selectedOptions = $scope.options.filter(function (el) {
+                        $scope.selectedOptions = $scope.resolvedOptions.filter(function (el) {
                             var id = $scope.getId(el);
                             for (var i = 0; i < $ngModelCtrl.$viewValue.length; i++) {
                                 var selectedId = $scope.getId($ngModelCtrl.$viewValue[i]);
@@ -70,7 +75,7 @@
                             }
                             return false;
                         });
-                        $scope.unselectedOptions = $scope.options.filter(function (el) {
+                        $scope.unselectedOptions = $scope.resolvedOptions.filter(function (el) {
                             return $scope.selectedOptions.indexOf(el) < 0;
                         });
                     }
@@ -121,13 +126,13 @@
                 };
 
                 $scope.selectAll = function () {
-                    $scope.selectedOptions = $scope.options;
+                    $scope.selectedOptions = $scope.resolvedOptions;
                     $scope.unselectedOptions = [];
                 };
 
                 $scope.unselectAll = function () {
                     $scope.selectedOptions = [];
-                    $scope.unselectedOptions = $scope.options;
+                    $scope.unselectedOptions = $scope.resolvedOptions;
                 };
 
                 $scope.toggleItem = function (item) {
@@ -188,6 +193,15 @@
                         }
                     }
                     return false;
+                };
+
+                $scope.updateOptions = function () {
+                    if (typeof $scope.options === 'function') {
+                        $scope.options().then(function (resolvedOptions) {
+                            $scope.resolvedOptions = resolvedOptions;
+                            updateSelectionLists();
+                        });
+                    }
                 };
 
                 // This search function is optimized to take into account the search limit.
@@ -252,7 +266,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "        <li ng-show=\"showSearch\">\n" +
     "            <div class=\"dropdown-header\">\n" +
     "                <input type=\"text\" class=\"form-control input-sm\" style=\"width: 100%;\"\n" +
-    "                       ng-model=\"searchFilter\" placeholder=\"Search...\"/>\n" +
+    "                       ng-model=\"searchFilter\" placeholder=\"Search...\" ng-change=\"updateOptions()\"/>\n" +
     "            </div>\n" +
     "        </li>\n" +
     "\n" +
