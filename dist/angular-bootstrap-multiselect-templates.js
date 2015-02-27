@@ -39,7 +39,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "\n" +
     "        <li ng-show=\"showSearch\" class=\"divider\"></li>\n" +
     "        <li role=\"presentation\" ng-repeat=\"option in unselectedOptions | filter:search() | limitTo: searchLimit\"\n" +
-    "            ng-if=\"!isSelected(option)\">\n" +
+    "            ng-if=\"!isSelected(option)\" ng-class=\"{disabled : selectedOptions.length >= selectionLimit}\">\n" +
     "            <a class=\"item-unselected\" href=\"\" ng-click=\"toggleItem(option); $event.stopPropagation()\">\n" +
     "                {{getDisplay(option)}}\n" +
     "            </a>\n" +

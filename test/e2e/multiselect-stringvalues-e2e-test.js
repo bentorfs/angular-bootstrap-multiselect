@@ -79,4 +79,26 @@ describe('Multiselect, using string models, ', function () {
         expect(selectedItems.count()).toBe(0);
     });
 
+    it('cannot select more than the selection limit', function () {
+        browser.get('test/e2e/test-stringvalues.html');
+
+        var form = element(by.name('selectionLimitTest'));
+        form.element(by.className('dropdown-toggle')).click();
+        var unselectedItems = form.all(by.tagName('li')).all(by.className('item-unselected'));
+        expect(unselectedItems.count()).toBe(4);
+        var selectedItems = form.all(by.tagName('li')).all(by.className('item-selected'));
+        expect(selectedItems.count()).toBe(0);
+
+        unselectedItems.get(0).click();
+        unselectedItems.get(1).click();
+        unselectedItems = form.all(by.tagName('li')).all(by.className('item-unselected'));
+        expect(unselectedItems.count()).toBe(2);
+        selectedItems = form.all(by.tagName('li')).all(by.className('item-selected'));
+        expect(selectedItems.count()).toBe(2);
+
+        // The other items should now be disabled
+        var disabledItems = form.all(by.className('disabled'));
+        expect(disabledItems.count()).toBe(2);
+    });
+
 });
