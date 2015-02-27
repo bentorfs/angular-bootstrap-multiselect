@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Angular Bootstrap Multiselect Test</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+</head>
+<body ng-app="testApp">
+
+<div class="container" ng-controller="TestController">
+
+    <h3>Test Async Data source</h3>
+
+    <form name="asyncTest">
+        <pre>Model value: {{selection1}}</pre>
+        <multiselect ng-model="selection1" options="someFunction" search-filter="searchFilter"
+                     show-search="true"></multiselect>
+    </form>
+
+</div>
+
+<script src="../../bower_components/angular/angular.js"></script>
+<script src="../../dist/angular-bootstrap-multiselect.min.js"></script>
+<script>
+    angular.module('testApp', ['btorfs.multiselect']);
+    angular.module('testApp').controller('TestController', ['$scope', '$q', '$timeout', function ($scope, $q, $timeout) {
+        $scope.someFunction = function () {
+            return $q(function (resolve, reject) {
+                $timeout(function () {
+                    resolve([$scope.searchFilter + '1', $scope.searchFilter + '2', $scope.searchFilter + '3', $scope.searchFilter + '4'])
+                }, 1000);
+            });
+        }
+
+    }]);
+</script>
+</body>
+</html>
