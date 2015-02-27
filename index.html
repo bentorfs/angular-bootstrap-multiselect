@@ -32,6 +32,7 @@
                 <h3>Features</h3>
                 <ul>
                     <li>No dependencies</li>
+					<li>Static or asynchronous data sources</li>
                     <li>Support big datasets</li>
                     <li>String or object model values</li>
                     <li>Works with form validation</li>
@@ -71,11 +72,13 @@
 
                 <section id="example-basic">
                     <h4>Basic</h4>
-
+					<p>
+					Provide a list of possible options, and the model value will reflect the subset of selected options. The list can contain strings or objects (see below).
+					</p>
                     <div class="row">
                         <div class="col-md-6">
                             <span hljs>
-<multiselect ng-model="selection1"
+<multiselect ng-model="selection"
              options="options">
 </multiselect>
                             </span>
@@ -92,7 +95,9 @@
 
                 <section id="example-search">
                     <h4>Search box</h4>
-
+					<p>
+					Make the list searchable by setting showSearch to true.
+					</p>
                     <div class="row">
                         <div class="col-md-6">
                             <span hljs>
@@ -114,11 +119,13 @@
 
                 <section id="example-selectall">
                     <h4>Select/Unselect all</h4>
-
+					<p>
+					Extra buttons will appear by setting the showSelectAll and showUnselectAll properties
+					</p>
                     <div class="row">
                         <div class="col-md-6">
                             <span hljs>
-<multiselect ng-model="selection3"
+<multiselect ng-model="selection"
              options="options"
              show-select-all="true"
              show-unselect-all="true">
@@ -138,11 +145,13 @@
 
                 <section id="example-selectionlimit">
                     <h4>Selection Limit</h4>
-
+                    <p>
+					Specify the 'selectionLimit' parameter to put an upper limit on the number of elements that can be selected. If the limit is reached, the rest of the options will be disabled.
+					</p>
                     <div class="row">
                         <div class="col-md-6">
                             <span hljs>
-<multiselect ng-model="selection4"
+<multiselect ng-model="selection"
              options="options"
              selection-limit="2">
 </multiselect>
@@ -160,11 +169,13 @@
 
                 <section id="example-searchlimit">
                     <h4>Limited search results</h4>
-
+                    <p>
+					Specify the 'searchLimit' parameter to put an upper limit on the number of search results that will be displayed.
+					</p>
                     <div class="row">
                         <div class="col-md-6">
                             <span hljs>
-<multiselect ng-model="selection5"
+<multiselect ng-model="selection"
              options="options"
              show-search="true"
              search-limit="3">
@@ -184,12 +195,18 @@
 
                 <section id="example-objects">
                     <h4>Objects as model</h4>
-
+					<p>
+					When using an object list instead of string list as the model value, following parameters are mandatory:
+					<ul>
+					<li><em>displayProp</em>: the propery on the object to be used for displaying in the search list
+					<li><em>idProp</em>: the propery on the object to be used to determine if two objects are equal. Can be the same as displayProp
+					</ul>
+					</p>
                     <div class="row">
                         <div class="col-md-6">
                             <span hljs>
- <multiselect ng-model="selection6"
-              options="options2"
+ <multiselect ng-model="selection"
+              options="options"
               id-prop="id"
               display-prop="name">
  </multiselect>
@@ -208,12 +225,14 @@
 
                 <section id="example-largedatasets">
                     <h4>Large Datasets</h4>
-
+					<p>
+					Some optimizations allow larger datasets than usually possible using angular bindings
+					</p>
                     <div class="row">
                         <div class="col-md-6">
                             <span hljs>
-<multiselect ng-model="selection7"
-             options="options3"
+<multiselect ng-model="selection"
+             options="options"
              show-search="true"
              id-prop="id"
              display-prop="name"
@@ -224,7 +243,47 @@
                                          display-prop="name" search-limit="10"></multiselect>
                         </div>
                         <div class="col-md-6">
-                            <pre>Options: List of 100 000 objects</pre>
+                            <pre>Options: List of 10 000 objects</pre>
+                            <pre>Model: {{selection7 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+				
+				<hr/>
+				
+				<section id="example-async">
+                    <h4>Asynchronous Datasource</h4>
+					<p>
+					<ul>
+					  <li>Provide a function instead of a list as 'options'
+					  <li>Access the contents of the search field using 'searchFilter'
+					</ul>
+					</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection"
+             options="options"
+			 search-filter="searchFilter"
+             show-search="true">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection7" options="fnOptions" search-filter="searchFilter" show-search="true"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>
+Options: 
+function() {
+  return $q(function (resolve, reject) {
+    $timeout(function () {
+      resolve([ 
+	      $scope.searchFilter + '1',
+	      $scope.searchFilter + '2'
+		])
+    }, 1000);
+  });
+}
+							</pre>
                             <pre>Model: {{selection7 | prettyprint}}</pre>
                         </div>
                     </div>
@@ -246,6 +305,7 @@
                             <li><a href="#example-searchlimit">Search Limit</a></li>
                             <li><a href="#example-objects">Objects as model</a></li>
                             <li><a href="#example-largedatasets">Large Datasets</a></li>
+							 <li><a href="#example-async">Asynchronous Datasource</a></li>
                         </ul>
 
                     </li>
