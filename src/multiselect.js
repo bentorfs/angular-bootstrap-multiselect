@@ -36,10 +36,6 @@
 
                 $scope.searchFilter = '';
 
-                if (typeof $scope.options !== 'function') {
-                    $scope.resolvedOptions = $scope.options;
-                }
-
                 if (typeof $attrs.disabled != 'undefined') {
                     $scope.disabled = true;
                 }
@@ -223,6 +219,13 @@
                         }
                     }
                 };
+
+                $scope.resolvedOptions = [];
+                if (typeof $scope.options !== 'function') {
+                    $scope.resolvedOptions = $scope.options;
+                } else {
+                    $scope.updateOptions();
+                }
 
             }
         };

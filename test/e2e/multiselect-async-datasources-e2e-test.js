@@ -10,7 +10,7 @@ describe('Multiselect, using string models, ', function () {
         var form = element(by.name('asyncTest'));
         form.element(by.className('dropdown-toggle')).click();
         var unselectedItems = form.all(by.tagName('li')).all(by.className('item-unselected'));
-        expect(unselectedItems.count()).toBe(0);
+        expect(unselectedItems.count()).toBe(4);
         var selectedItems = form.all(by.tagName('li')).all(by.className('item-selected'));
         expect(selectedItems.count()).toBe(0);
 
