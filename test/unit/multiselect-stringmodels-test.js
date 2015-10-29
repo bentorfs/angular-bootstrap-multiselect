@@ -41,12 +41,20 @@ describe("The multiselect directive, when using string models,", function () {
         expect(element.isolateScope().unselectedOptions.length).toBe(3);
     });
 
-    it('shows a label on the button when no items have been chosen', function () {
+    it('shows a default label on the button when no items have been chosen', function () {
         $scope.options = ['el1', 'el2', 'el3'];
         var element = $compile("<multiselect ng-model='selection' options='options'></multiselect>")($scope);
         $scope.$digest();
 
         expect(element.isolateScope().getButtonText()).toBe('Select');
+    });
+
+    it('shows a custom label on the button when no items have been chosen', function () {
+        $scope.options = ['el1', 'el2', 'el3'];
+        var element = $compile("<multiselect ng-model='selection' options='options' default-text='dummy'></multiselect>")($scope);
+        $scope.$digest();
+
+        expect(element.isolateScope().getButtonText()).toBe('dummy');
     });
 
     it('shows the name of the element when one item is chosen', function () {
