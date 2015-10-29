@@ -26,16 +26,19 @@
                 showUnselectAll: '=?',
                 showSearch: '=?',
                 searchFilter: '=?',
-                disabled: '=?ngDisabled'
+                disabled: '=?ngDisabled',
+                defaultText: '@'
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
             link: function ($scope, $element, $attrs, $ngModelCtrl) {
                 $scope.selectionLimit = $scope.selectionLimit || 0;
                 $scope.searchLimit = $scope.searchLimit || 25;
+                $scope.defaultText = $scope.defaultText || 'Select';
 
                 $scope.searchFilter = '';
 
+                $scope.resolvedOptions = [];
                 if (typeof $scope.options !== 'function') {
                     $scope.resolvedOptions = $scope.options;
                 }
@@ -116,12 +119,12 @@
                         var totalSelected;
                         totalSelected = angular.isDefined($scope.selectedOptions) ? $scope.selectedOptions.length : 0;
                         if (totalSelected === 0) {
-                            return 'Select';
+                            return $scope.defaultText;
                         } else {
                             return totalSelected + ' ' + 'selected';
                         }
                     } else {
-                        return 'Select';
+                        return $scope.defaultText;
                     }
                 };
 
