@@ -27,7 +27,9 @@
                 showSearch: '=?',
                 searchFilter: '=?',
                 disabled: '=?ngDisabled',
-                defaultText: '@'
+                defaultText: '@',
+                ngChange: '&',
+                itemValue: '=?'
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
@@ -68,19 +70,19 @@
                         }
                         $scope.unselectedOptions = $scope.resolvedOptions.slice(); // Take a copy
                     } else {
-                        $scope.selectedOptions = $scope.resolvedOptions.filter(function (el) {
-                            var id = $scope.getId(el);
-                            for (var i = 0; i < $ngModelCtrl.$viewValue.length; i++) {
-                                var selectedId = $scope.getId($ngModelCtrl.$viewValue[i]);
-                                if (id === selectedId) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        });
-                        $scope.unselectedOptions = $scope.resolvedOptions.filter(function (el) {
-                            return $scope.selectedOptions.indexOf(el) < 0;
-                        });
+                        /*$scope.selectedOptions = $scope.resolvedOptions.filter(function (el) {
+                         var id = $scope.getId(el);
+                         for (var i = 0; i < $ngModelCtrl.$viewValue.length; i++) {
+                         var selectedId = $scope.getId($ngModelCtrl.$viewValue[i]);
+                         if (id === selectedId) {
+                         return true;
+                         }
+                         }
+                         return false;
+                         });
+                         $scope.unselectedOptions = $scope.resolvedOptions.filter(function (el) {
+                         return $scope.selectedOptions.indexOf(el) < 0;
+                         });*/
                     }
                 };
 
@@ -128,30 +130,44 @@
                     }
                 };
 
+                function getItemValue(item) {
+                    return $scope.itemValue && angular.isObject(item)? item[$scope.idProp] : item;
+                }
+
+                function ngChange() {
+                    if(angular.isFunction($scope.ngChange))
+                        return $scope.ngChange;
+                    return function(){};
+                }
+
                 $scope.selectAll = function () {
-                    $scope.selectedOptions = $scope.resolvedOptions;
+                    $scope.selectedOptions = $scope.resolvedOptions.map(getItemValue);
                     $scope.unselectedOptions = [];
+                    ngChange();
                 };
 
                 $scope.unselectAll = function () {
                     $scope.selectedOptions = [];
-                    $scope.unselectedOptions = $scope.resolvedOptions;
+                    $scope.unselectedOptions = $scope.resolvedOptions.map(getItemValue);
+                    ngChange();
                 };
 
                 $scope.toggleItem = function (item) {
-                    if (typeof $scope.selectedOptions === 'undefined') {
+                    if (typeof $scope.selectedOptions === 'undefined')
                         $scope.selectedOptions = [];
-                    }
-                    var selectedIndex = $scope.selectedOptions.indexOf(item);
-                    var currentlySelected = (selectedIndex !== -1);
-                    if (currentlySelected) {
+
+                    var itemData = getItemValue(item);
+
+                    var selectedIndex = $scope.selectedOptions.indexOf(itemData);
+                    if (selectedIndex !== -1) {
                         $scope.unselectedOptions.push($scope.selectedOptions[selectedIndex]);
                         $scope.selectedOptions.splice(selectedIndex, 1);
-                    } else if (!currentlySelected && ($scope.selectionLimit === 0 || $scope.selectedOptions.length < $scope.selectionLimit)) {
-                        var unselectedIndex = $scope.unselectedOptions.indexOf(item);
+                    } else if ($scope.selectionLimit === 0 || $scope.selectedOptions.length < $scope.selectionLimit) {
+                        var unselectedIndex = $scope.unselectedOptions.indexOf(itemData);
                         $scope.unselectedOptions.splice(unselectedIndex, 1);
-                        $scope.selectedOptions.push(item);
+                        $scope.selectedOptions.push(itemData);
                     }
+                    ngChange();
                 };
 
                 $scope.getId = function (item) {
