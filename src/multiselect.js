@@ -85,8 +85,9 @@
                 };
 
                 // Update selection options if data changes
-                $scope.$watch('options', function(newVal, oldVal) {
+                $scope.$watch('options', function(newVal) {
                     $scope.options = newVal;
+                    $scope.resolvedOptions = newVal;
                     updateSelectionLists();
                 }, true);
 
