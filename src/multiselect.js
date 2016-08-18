@@ -84,6 +84,12 @@
                     }
                 };
 
+                // Update selection options if data changes
+                $scope.$watch('options', function(newVal, oldVal) {
+                    $scope.options = newVal;
+                    updateSelectionLists();
+                }, true);
+
                 $ngModelCtrl.$render = function () {
                     updateSelectionLists();
                 };
