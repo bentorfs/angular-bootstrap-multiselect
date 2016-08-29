@@ -93,6 +93,11 @@
                     }
                 };
 
+                $scope.$watch('options',function(data){ 
+                    $scope.resolvedOptions = data;
+                    updateSelectionLists();
+                },true);  
+
                 var watcher = $scope.$watch('selectedOptions', function () {
                     $ngModelCtrl.$setViewValue(angular.copy($scope.selectedOptions));
                 }, true);
