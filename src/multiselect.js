@@ -93,6 +93,16 @@
                     }
                 };
 
+                $scope.$watch('options',function(data){ 
+                    if (typeof data != 'undefined') {
+                        $scope.resolvedOptions = data;
+                        updateSelectionLists();
+                    } else {
+                        $scope.resolvedOptions = [];
+                        updateSelectionLists();
+                    }
+                },true); 
+
                 var watcher = $scope.$watch('selectedOptions', function () {
                     $ngModelCtrl.$setViewValue(angular.copy($scope.selectedOptions));
                 }, true);
