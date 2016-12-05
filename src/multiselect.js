@@ -27,14 +27,13 @@
                 showSearch: '=?',
                 searchFilter: '=?',
                 disabled: '=?ngDisabled',
-                defaultText: '@'
+                labels: '=?'
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
             link: function ($scope, $element, $attrs, $ngModelCtrl) {
                 $scope.selectionLimit = $scope.selectionLimit || 0;
                 $scope.searchLimit = $scope.searchLimit || 25;
-                $scope.defaultText = $scope.defaultText || 'Select';
 
                 $scope.searchFilter = '';
 
@@ -116,15 +115,14 @@
                         return $scope.getDisplay($scope.selectedOptions[0]);
                     }
                     if ($scope.selectedOptions && $scope.selectedOptions.length > 1) {
-                        var totalSelected;
-                        totalSelected = angular.isDefined($scope.selectedOptions) ? $scope.selectedOptions.length : 0;
+                        var totalSelected = angular.isDefined($scope.selectedOptions) ? $scope.selectedOptions.length : 0;
                         if (totalSelected === 0) {
-                            return $scope.defaultText;
+                            return $scope.labels && $scope.labels.select ? $scope.labels.select : 'Select';
                         } else {
-                            return totalSelected + ' ' + 'selected';
+                            return totalSelected + ' ' + ($scope.labels && $scope.labels.itemsSelected ? $scope.labels.itemsSelected : 'selected');
                         }
                     } else {
-                        return $scope.defaultText;
+                        return $scope.labels && $scope.labels.select ? $scope.labels.select : 'Select';
                     }
                 };
 

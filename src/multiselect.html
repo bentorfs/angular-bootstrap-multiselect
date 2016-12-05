@@ -7,12 +7,12 @@
 
         <li ng-show="showSelectAll">
             <a ng-click="selectAll()" href="">
-                <span class="glyphicon glyphicon-ok"></span> Select All
+                <span class="glyphicon glyphicon-ok"></span> {{labels.selectAll || 'Select All'}}
             </a>
         </li>
         <li ng-show="showUnselectAll">
             <a ng-click="unselectAll()" href="">
-                <span class="glyphicon glyphicon-remove"></span> Unselect All
+                <span class="glyphicon glyphicon-remove"></span> {{labels.unselectAll || 'Unselect All'}}
             </a>
         </li>
         <li ng-show="(showSelectAll || showUnselectAll)"
@@ -30,7 +30,7 @@
         <li ng-show="showSearch">
             <div class="dropdown-header">
                 <input type="text" class="form-control input-sm" style="width: 100%;"
-                       ng-model="searchFilter" placeholder="Search..." ng-change="updateOptions()"/>
+                       ng-model="searchFilter" placeholder="{{labels.search || 'Search...'}}" ng-change="updateOptions()"/>
             </div>
         </li>
 
@@ -45,7 +45,7 @@
 
         <li class="divider" ng-show="selectionLimit > 1"></li>
         <li role="presentation" ng-show="selectionLimit > 1">
-            <a>{{selectedOptions.length || 0}} / {{selectionLimit}} selected</a>
+            <a>{{selectedOptions.length || 0}} / {{selectionLimit}} {{labels.itemsSelected || 'selected'}}</a>
         </li>
 
     </ul>
