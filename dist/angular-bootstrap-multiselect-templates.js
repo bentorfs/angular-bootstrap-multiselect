@@ -11,12 +11,12 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "\n" +
     "        <li ng-show=\"showSelectAll\">\n" +
     "            <a ng-click=\"selectAll()\" href=\"\">\n" +
-    "                <span class=\"glyphicon glyphicon-ok\"></span> Select All\n" +
+    "                <span class=\"glyphicon glyphicon-ok\"></span> {{labels.selectAll || 'Select All'}}\n" +
     "            </a>\n" +
     "        </li>\n" +
     "        <li ng-show=\"showUnselectAll\">\n" +
     "            <a ng-click=\"unselectAll()\" href=\"\">\n" +
-    "                <span class=\"glyphicon glyphicon-remove\"></span> Unselect All\n" +
+    "                <span class=\"glyphicon glyphicon-remove\"></span> {{labels.unselectAll || 'Unselect All'}}\n" +
     "            </a>\n" +
     "        </li>\n" +
     "        <li ng-show=\"(showSelectAll || showUnselectAll)\"\n" +
@@ -34,7 +34,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "        <li ng-show=\"showSearch\">\n" +
     "            <div class=\"dropdown-header\">\n" +
     "                <input type=\"text\" class=\"form-control input-sm\" style=\"width: 100%;\"\n" +
-    "                       ng-model=\"searchFilter\" placeholder=\"Search...\" ng-change=\"updateOptions()\"/>\n" +
+    "                       ng-model=\"searchFilter\" placeholder=\"{{labels.search || 'Search...'}}\" ng-change=\"updateOptions()\"/>\n" +
     "            </div>\n" +
     "        </li>\n" +
     "\n" +
@@ -49,7 +49,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "\n" +
     "        <li class=\"divider\" ng-show=\"selectionLimit > 1\"></li>\n" +
     "        <li role=\"presentation\" ng-show=\"selectionLimit > 1\">\n" +
-    "            <a>{{selectedOptions.length || 0}} / {{selectionLimit}} selected</a>\n" +
+    "            <a>{{selectedOptions.length || 0}} / {{selectionLimit}} {{labels.itemsSelected || 'selected'}}</a>\n" +
     "        </li>\n" +
     "\n" +
     "    </ul>\n" +

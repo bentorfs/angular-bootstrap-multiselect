@@ -49,12 +49,27 @@ describe("The multiselect directive, when using string models,", function () {
         expect(element.isolateScope().getButtonText()).toBe('Select');
     });
 
-    it('shows a custom label on the button when no items have been chosen', function () {
+    it('shows the label passed to the directive on the button when no items have been chosen', function () {
         $scope.options = ['el1', 'el2', 'el3'];
-        var element = $compile("<multiselect ng-model='selection' options='options' default-text='dummy'></multiselect>")($scope);
+        $scope.labels = {
+            itemsSelected: 'selecionados',
+            search: 'Procurar...',
+            select: 'Selecionar',
+            selectAll: 'Selecionar Todos',
+            unselectAll: 'Deselecionar Todos'
+        };
+
+        var element = $compile("<multiselect ng-model='selection' options='options' labels='labels'></multiselect>")($scope);
         $scope.$digest();
 
-        expect(element.isolateScope().getButtonText()).toBe('dummy');
+        expect(element.isolateScope().labels).toBeDefined();
+        expect(element.isolateScope().labels.itemsSelected).toEqual('selecionados');
+        expect(element.isolateScope().labels.search).toEqual('Procurar...');
+        expect(element.isolateScope().labels.select).toEqual('Selecionar');
+        expect(element.isolateScope().labels.selectAll).toEqual('Selecionar Todos');
+        expect(element.isolateScope().labels.unselectAll).toEqual('Deselecionar Todos');
+
+        expect(element.isolateScope().getButtonText()).toBe('Selecionar');
     });
 
     it('shows the name of the element when one item is chosen', function () {
@@ -73,6 +88,22 @@ describe("The multiselect directive, when using string models,", function () {
         $scope.$digest();
 
         expect(element.isolateScope().getButtonText()).toBe('2 selected');
+    });
+
+    it('shows the number of elements and the label that is passed when multiple items are chosen', function () {
+        $scope.options = ['el1', 'el2', 'el3'];
+        $scope.selection = ['el1', 'el2'];
+        $scope.labels = {
+            itemsSelected: 'selecionados',
+            search: 'Procurar...',
+            select: 'Selecionar',
+            selectAll: 'Selecionar Todos',
+            unselectAll: 'Deselecionar Todos'
+        };
+        var element = $compile("<multiselect ng-model='selection' options='options' labels='labels'></multiselect>")($scope);
+        $scope.$digest();
+
+        expect(element.isolateScope().getButtonText()).toBe('2 selecionados');
     });
 
     it('can select and unselect all at once', function () {
