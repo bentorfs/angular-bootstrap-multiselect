@@ -27,7 +27,8 @@
                 showSearch: '=?',
                 searchFilter: '=?',
                 disabled: '=?ngDisabled',
-                labels: '=?'
+                labels: '=?',
+                showTooltip: '=?'
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
