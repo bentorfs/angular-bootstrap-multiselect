@@ -128,13 +128,13 @@
                 };
 
                 $scope.selectAll = function () {
-                    $scope.selectedOptions = $scope.resolvedOptions;
+                    $scope.selectedOptions = $scope.resolvedOptions.slice(); // Take a copy;
                     $scope.unselectedOptions = [];
                 };
 
                 $scope.unselectAll = function () {
                     $scope.selectedOptions = [];
-                    $scope.unselectedOptions = $scope.resolvedOptions;
+                    $scope.unselectedOptions = $scope.resolvedOptions.slice(); // Take a copy;
                 };
 
                 $scope.toggleItem = function (item) {
