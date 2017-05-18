@@ -128,13 +128,13 @@
                 };
 
                 $scope.selectAll = function () {
-                    $scope.selectedOptions = $scope.resolvedOptions;
+                    $scope.selectedOptions = $scope.resolvedOptions.slice(); // Take a copy;
                     $scope.unselectedOptions = [];
                 };
 
                 $scope.unselectAll = function () {
                     $scope.selectedOptions = [];
-                    $scope.unselectedOptions = $scope.resolvedOptions;
+                    $scope.unselectedOptions = $scope.resolvedOptions.slice(); // Take a copy;
                 };
 
                 $scope.toggleItem = function (item) {
@@ -234,7 +234,7 @@
 
 angular.module('btorfs.multiselect.templates', ['multiselect.html']);
 
-angular.module("multiselect.html", []).run(["$templateCache", function($templateCache) {
+angular.module("multiselect.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("multiselect.html",
     "<div class=\"btn-group\" style=\"width: 100%\">\n" +
     "    <button type=\"button\" class=\"btn btn-default btn-block dropdown-toggle\" ng-click=\"toggleDropdown()\" ng-disabled=\"disabled\">\n" +
