@@ -7,6 +7,7 @@
     "type": "git",
     "url": "https://github.com/bentorfs/angular-bootstrap-multiselect.git"
   },
+  "main": "index.js",
   "devDependencies": {
     "grunt": "~1.0.1",
     "grunt-bootlint": "~0.10.1",
