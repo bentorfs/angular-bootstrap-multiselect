@@ -47,9 +47,6 @@
                     $scope.disabled = true;
                 }
 
-                $scope.toggleDropdown = function () {
-                    $scope.open = !$scope.open;
-                };
 
                 var closeHandler = function (event) {
                     if (!$element[0].contains(event.target)) {
@@ -82,6 +79,12 @@
                             return $scope.selectedOptions.indexOf(el) < 0;
                         });
                     }
+                };
+
+                $scope.toggleDropdown = function () {
+                    $scope.open = !$scope.open;
+                    $scope.resolvedOptions = $scope.options;
+                    updateSelectionLists();
                 };
 
                 $ngModelCtrl.$render = function () {
