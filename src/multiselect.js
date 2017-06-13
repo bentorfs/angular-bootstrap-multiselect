@@ -29,7 +29,7 @@
                 disabled: '=?ngDisabled',
                 labels: '=?',
                 showTooltip: '=?',
-                placeholder: '@'
+                placeholder: '@?'
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
