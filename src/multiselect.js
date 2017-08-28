@@ -28,6 +28,7 @@
                 searchFilter: '=?',
                 disabled: '=?ngDisabled',
                 labels: '=?',
+                classesBtn: '=?',
                 showTooltip: '=?',
                 placeholder: '@?'
             },
