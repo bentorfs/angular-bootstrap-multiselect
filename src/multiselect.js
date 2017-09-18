@@ -34,6 +34,11 @@
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
+            controller: function($scope) {
+                if (angular.isUndefined($scope.classesBtn)) {
+                    $scope.classesBtn = ['btn-block','btn-default'];
+                }
+            },
             link: function ($scope, $element, $attrs, $ngModelCtrl) {
                 $scope.selectionLimit = $scope.selectionLimit || 0;
                 $scope.searchLimit = $scope.searchLimit || 25;
