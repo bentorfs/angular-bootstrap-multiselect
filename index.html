@@ -85,7 +85,7 @@
                             <multiselect ng-model="selection1" options="options"></multiselect>
                         </div>
                         <div class="col-md-6">
-                            <pre>Options: {{options | prettyprint}}</pre>
+                            <pre>options = {{options | prettyprint}}</pre>
                             <pre>Model: {{selection1 | prettyprint}}</pre>
                         </div>
                     </div>
@@ -109,7 +109,7 @@
                             <multiselect ng-model="selection2" options="options" show-search="true"></multiselect>
                         </div>
                         <div class="col-md-6">
-                            <pre>Options: {{options | prettyprint}}</pre>
+                            <pre>options = {{options | prettyprint}}</pre>
                             <pre>Model: {{selection2 | prettyprint}}</pre>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                                          show-unselect-all="true"></multiselect>
                         </div>
                         <div class="col-md-6">
-                            <pre>Options: {{options | prettyprint}}</pre>
+                            <pre>options = {{options | prettyprint}}</pre>
                             <pre>Model: {{selection3 | prettyprint}}</pre>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
                             <multiselect ng-model="selection4" options="options" selection-limit="2"></multiselect>
                         </div>
                         <div class="col-md-6">
-                            <pre>Options: {{options | prettyprint}}</pre>
+                            <pre>options = {{options | prettyprint}}</pre>
                             <pre>Model: {{selection4 | prettyprint}}</pre>
                         </div>
                     </div>
@@ -185,7 +185,7 @@
                                          search-limit="3"></multiselect>
                         </div>
                         <div class="col-md-6">
-                            <pre>Options: {{options2 | prettyprint}}</pre>
+                            <pre>options = {{options2 | prettyprint}}</pre>
                             <pre>Model: {{selection5 | prettyprint}}</pre>
                         </div>
                     </div>
@@ -215,7 +215,7 @@
                                          display-prop="name"></multiselect>
                         </div>
                         <div class="col-md-6">
-                            <pre>Options: {{options2 | prettyprint}}</pre>
+                            <pre>options = {{options2 | prettyprint}}</pre>
                             <pre>Model: {{selection6 | prettyprint}}</pre>
                         </div>
                     </div>
@@ -243,7 +243,7 @@
                                          display-prop="name" search-limit="10"></multiselect>
                         </div>
                         <div class="col-md-6">
-                            <pre>Options: List of 100 000 objects</pre>
+                            <pre>options = List of 100 000 objects</pre>
                             <pre>Model: {{selection7 | prettyprint}}</pre>
                         </div>
                     </div>
@@ -272,7 +272,7 @@
                         </div>
                         <div class="col-md-6">
                             <pre>
-Options: 
+options = 
 function() {
   return $q(function (resolve, reject) {
     $timeout(function () {
@@ -285,6 +285,105 @@ function() {
 }
 							</pre>
                             <pre>Model: {{selection7 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <hr/>
+
+                <section id="example-css-button">
+                    <h4>Custom CSS classes</h4>
+                    <p>
+                    Provide a list of CSS classes that should be applied to the button element (default: btn-default btn-block)
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection"
+             options="options"
+             classes-btn="'btn-primary btn-block'">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection8" options="options" classes-btn="'btn-primary btn-block'"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>options = {{options | prettyprint}}</pre>
+                            <pre>Model: {{selection8 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <hr/>
+
+                <section id="example-placeholder">
+                    <h4>Custom Placeholder</h4>
+                    <p>
+                    Provide a custom label to be displayed as placeholder. If you want to replace more strings, check <a href="#example-labels">Custom Labels</a>
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection"
+             options="options"
+             placeholder="Choose an option">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection8" options="options" placeholder="Choose an option"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>options = {{options | prettyprint}}</pre>
+                            <pre>Model: {{selection9 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <hr/>
+
+                <section id="example-tooltip">
+                    <h4>Tooltip</h4>
+                    <p>
+                    Show tooltips in the option list. Useful in case of long values.
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection"
+             options="options"
+             show-tooltip="true">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection9" options="options" show-tooltip="true"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>options = {{options | prettyprint}}</pre>
+                            <pre>Model: {{selection9 | prettyprint}}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <hr/>
+
+                <section id="example-labels">
+                    <h4>Custom Labels</h4>
+                    <p>
+                    Provide custom labels for all strings in the widget
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span hljs>
+<multiselect ng-model="selection"
+             options="options"
+             show-search="true"
+             labels="labels">
+</multiselect>
+                            </span>
+                            <multiselect ng-model="selection10" options="options" show-search="true" show-select-all="true"
+                             show-unselect-all="true" labels="labels"></multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>options = {{options | prettyprint}}</pre>
+                            <pre>labels = {{labels | prettyprint}}</pre>
+                            <pre>Model: {{selection10 | prettyprint}}</pre>
                         </div>
                     </div>
                 </section>
@@ -305,7 +404,11 @@ function() {
                             <li><a href="#example-searchlimit">Search Limit</a></li>
                             <li><a href="#example-objects">Objects as model</a></li>
                             <li><a href="#example-largedatasets">Large Datasets</a></li>
-							 <li><a href="#example-async">Asynchronous Datasource</a></li>
+							<li><a href="#example-async">Asynchronous Datasource</a></li>
+                            <li><a href="#example-css-button">Custom CSS classes</a></li>
+                            <li><a href="#example-placeholder">Custom Placeholder</a></li>
+                            <li><a href="#example-tooltip">Tooltips</a></li>
+                            <li><a href="#example-labels">Custom Labels</a></li>
                         </ul>
 
                     </li>

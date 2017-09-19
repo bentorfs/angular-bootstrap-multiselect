@@ -1,7 +1,7 @@
 {
   "name": "angular-bootstrap-multiselect",
-  "version": "1.1.1",
-  "main": "dist/angular-bootstrap-multiselect.min.js",
+  "main": "dist/angular-bootstrap-multiselect.js",
+  "homepage": "http://bentorfs.github.io/angular-bootstrap-multiselect/",
   "ignore": [
     "src",
     "test",

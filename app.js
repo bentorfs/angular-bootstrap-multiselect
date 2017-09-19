@@ -43,6 +43,13 @@
 
         $scope.embed = '<script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>';
 
+        $scope.labels = {   itemsSelected: 'éléments sélectionnés',
+                            selectAll: 'Tout Selectionner',
+                            unselectAll: 'Tout Déselectionner',
+                            search: 'Cherchez',
+                            select: 'Selectez'
+                        };
+
     }]);
 
     docs.filter('prettyprint', ['vkBeautify', function (vkBeautify) {

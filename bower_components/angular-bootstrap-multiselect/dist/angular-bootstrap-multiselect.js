@@ -26,16 +26,26 @@
                 showUnselectAll: '=?',
                 showSearch: '=?',
                 searchFilter: '=?',
-                disabled: '=?ngDisabled'
+                disabled: '=?ngDisabled',
+                labels: '=?',
+                classesBtn: '=?',
+                showTooltip: '=?',
+                placeholder: '@?'
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
+            controller: ['$scope', function($scope) {
+                if (angular.isUndefined($scope.classesBtn)) {
+                    $scope.classesBtn = ['btn-block','btn-default'];
+                }
+            }],
             link: function ($scope, $element, $attrs, $ngModelCtrl) {
                 $scope.selectionLimit = $scope.selectionLimit || 0;
                 $scope.searchLimit = $scope.searchLimit || 25;
 
                 $scope.searchFilter = '';
 
+                $scope.resolvedOptions = [];
                 if (typeof $scope.options !== 'function') {
                     $scope.resolvedOptions = $scope.options;
                 }
@@ -44,9 +54,6 @@
                     $scope.disabled = true;
                 }
 
-                $scope.toggleDropdown = function () {
-                    $scope.open = !$scope.open;
-                };
 
                 var closeHandler = function (event) {
                     if (!$element[0].contains(event.target)) {
@@ -81,6 +88,12 @@
                     }
                 };
 
+                $scope.toggleDropdown = function () {
+                    $scope.open = !$scope.open;
+                    $scope.resolvedOptions = $scope.options;
+                    updateSelectionLists();
+                };
+
                 $ngModelCtrl.$render = function () {
                     updateSelectionLists();
                 };
@@ -113,26 +126,25 @@
                         return $scope.getDisplay($scope.selectedOptions[0]);
                     }
                     if ($scope.selectedOptions && $scope.selectedOptions.length > 1) {
-                        var totalSelected;
-                        totalSelected = angular.isDefined($scope.selectedOptions) ? $scope.selectedOptions.length : 0;
+                        var totalSelected = angular.isDefined($scope.selectedOptions) ? $scope.selectedOptions.length : 0;
                         if (totalSelected === 0) {
-                            return 'Select';
+                            return $scope.labels && $scope.labels.select ? $scope.labels.select : ($scope.placeholder || 'Select');
                         } else {
-                            return totalSelected + ' ' + 'selected';
+                            return totalSelected + ' ' + ($scope.labels && $scope.labels.itemsSelected ? $scope.labels.itemsSelected : 'selected');
                         }
                     } else {
-                        return 'Select';
+                        return $scope.labels && $scope.labels.select ? $scope.labels.select : ($scope.placeholder || 'Select');
                     }
                 };
 
                 $scope.selectAll = function () {
-                    $scope.selectedOptions = $scope.resolvedOptions;
+                    $scope.selectedOptions = $scope.resolvedOptions.slice(); // Take a copy;
                     $scope.unselectedOptions = [];
                 };
 
                 $scope.unselectAll = function () {
                     $scope.selectedOptions = [];
-                    $scope.unselectedOptions = $scope.resolvedOptions;
+                    $scope.unselectedOptions = $scope.resolvedOptions.slice(); // Take a copy;
                 };
 
                 $scope.toggleItem = function (item) {
@@ -232,10 +244,10 @@
 
 angular.module('btorfs.multiselect.templates', ['multiselect.html']);
 
-angular.module("multiselect.html", []).run(["$templateCache", function($templateCache) {
+angular.module("multiselect.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("multiselect.html",
     "<div class=\"btn-group\" style=\"width: 100%\">\n" +
-    "    <button type=\"button\" class=\"form-control btn btn-default btn-block dropdown-toggle\" ng-click=\"toggleDropdown()\" ng-disabled=\"disabled\">\n" +
+    "    <button type=\"button\" class=\"btn dropdown-toggle\" ng-class=\"classesBtn\" ng-click=\"toggleDropdown()\" ng-disabled=\"disabled\" style=\"white-space: nowrap; overflow-x: hidden; text-overflow: ellipsis;\">\n" +
     "        {{getButtonText()}}&nbsp;<span class=\"caret\"></span>\n" +
     "    </button>\n" +
     "    <ul class=\"dropdown-menu dropdown-menu-form\"\n" +
@@ -243,12 +255,12 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "\n" +
     "        <li ng-show=\"showSelectAll\">\n" +
     "            <a ng-click=\"selectAll()\" href=\"\">\n" +
-    "                <span class=\"glyphicon glyphicon-ok\"></span> Select All\n" +
+    "                <span class=\"glyphicon glyphicon-ok\"></span> {{labels.selectAll || 'Select All'}}\n" +
     "            </a>\n" +
     "        </li>\n" +
     "        <li ng-show=\"showUnselectAll\">\n" +
     "            <a ng-click=\"unselectAll()\" href=\"\">\n" +
-    "                <span class=\"glyphicon glyphicon-remove\"></span> Unselect All\n" +
+    "                <span class=\"glyphicon glyphicon-remove\"></span> {{labels.unselectAll || 'Unselect All'}}\n" +
     "            </a>\n" +
     "        </li>\n" +
     "        <li ng-show=\"(showSelectAll || showUnselectAll)\"\n" +
@@ -256,7 +268,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "        </li>\n" +
     "\n" +
     "        <li role=\"presentation\" ng-repeat=\"option in selectedOptions\" class=\"active\">\n" +
-    "            <a class=\"item-selected\" href=\"\" ng-click=\"toggleItem(option); $event.stopPropagation()\">\n" +
+    "            <a class=\"item-selected\" href=\"\" title=\"{{showTooltip ? getDisplay(option) : ''}}\" ng-click=\"toggleItem(option); $event.stopPropagation()\" style=\"overflow-x: hidden;text-overflow: ellipsis\">\n" +
     "                <span class=\"glyphicon glyphicon-remove\"></span>\n" +
     "                {{getDisplay(option)}}\n" +
     "            </a>\n" +
@@ -266,7 +278,7 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "        <li ng-show=\"showSearch\">\n" +
     "            <div class=\"dropdown-header\">\n" +
     "                <input type=\"text\" class=\"form-control input-sm\" style=\"width: 100%;\"\n" +
-    "                       ng-model=\"searchFilter\" placeholder=\"Search...\" ng-change=\"updateOptions()\"/>\n" +
+    "                       ng-model=\"searchFilter\" placeholder=\"{{labels.search || 'Search...'}}\" ng-change=\"updateOptions()\"/>\n" +
     "            </div>\n" +
     "        </li>\n" +
     "\n" +
@@ -274,16 +286,17 @@ angular.module("multiselect.html", []).run(["$templateCache", function($template
     "        <li role=\"presentation\" ng-repeat=\"option in unselectedOptions | filter:search() | limitTo: searchLimit\"\n" +
     "            ng-if=\"!isSelected(option)\"\n" +
     "            ng-class=\"{disabled : selectionLimit && selectedOptions.length >= selectionLimit}\">\n" +
-    "            <a class=\"item-unselected\" href=\"\" ng-click=\"toggleItem(option); $event.stopPropagation()\">\n" +
+    "            <a class=\"item-unselected\" href=\"\" title=\"{{showTooltip ? getDisplay(option) : ''}}\" ng-click=\"toggleItem(option); $event.stopPropagation()\" style=\"overflow-x: hidden;text-overflow: ellipsis\">\n" +
     "                {{getDisplay(option)}}\n" +
     "            </a>\n" +
     "        </li>\n" +
     "\n" +
     "        <li class=\"divider\" ng-show=\"selectionLimit > 1\"></li>\n" +
     "        <li role=\"presentation\" ng-show=\"selectionLimit > 1\">\n" +
-    "            <a>{{selectedOptions.length || 0}} / {{selectionLimit}} selected</a>\n" +
+    "            <a>{{selectedOptions.length || 0}} / {{selectionLimit}} {{labels.itemsSelected || 'selected'}}</a>\n" +
     "        </li>\n" +
     "\n" +
     "    </ul>\n" +
-    "</div>");
+    "</div>\n" +
+    "");
 }]);
