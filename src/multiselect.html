@@ -1,5 +1,5 @@
 <div class="btn-group" style="width: 100%">
-    <button type="button" class="btn btn-default btn-block dropdown-toggle" ng-click="toggleDropdown()" ng-disabled="disabled" style="white-space: nowrap; overflow-x: hidden; text-overflow: ellipsis;">
+    <button type="button" class="btn dropdown-toggle" ng-class="classesBtn" ng-click="toggleDropdown()" ng-disabled="disabled" style="white-space: nowrap; overflow-x: hidden; text-overflow: ellipsis;">
         {{getButtonText()}}&nbsp;<span class="caret"></span>
     </button>
     <ul class="dropdown-menu dropdown-menu-form"
@@ -20,7 +20,7 @@
         </li>
 
         <li role="presentation" ng-repeat="option in selectedOptions" class="active">
-            <a class="item-selected" href="" title="{{showTooltip ? getDisplay(option) : ''}}" ng-click="toggleItem(option); $event.stopPropagation()" style="overflow-x: auto">
+            <a class="item-selected" href="" title="{{showTooltip ? getDisplay(option) : ''}}" ng-click="toggleItem(option); $event.stopPropagation()" style="overflow-x: hidden;text-overflow: ellipsis">
                 <span class="glyphicon glyphicon-remove"></span>
                 {{getDisplay(option)}}
             </a>
@@ -38,7 +38,7 @@
         <li role="presentation" ng-repeat="option in unselectedOptions | filter:search() | limitTo: searchLimit"
             ng-if="!isSelected(option)"
             ng-class="{disabled : selectionLimit && selectedOptions.length >= selectionLimit}">
-            <a class="item-unselected" href="" title="{{showTooltip ? getDisplay(option) : ''}}" ng-click="toggleItem(option); $event.stopPropagation()" style="overflow-x: auto">
+            <a class="item-unselected" href="" title="{{showTooltip ? getDisplay(option) : ''}}" ng-click="toggleItem(option); $event.stopPropagation()" style="overflow-x: hidden;text-overflow: ellipsis">
                 {{getDisplay(option)}}
             </a>
         </li>

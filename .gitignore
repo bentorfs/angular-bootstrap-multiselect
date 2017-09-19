@@ -27,6 +27,7 @@ nbproject
 *.sublime-project
 *.sublime-workspace
 .idea
+.bowerrc
 
 # Folders to ignore
 node_modules
