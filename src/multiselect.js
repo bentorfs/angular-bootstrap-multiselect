@@ -95,10 +95,12 @@
                 };
 
                 $ngModelCtrl.$render = function () {
+                    $scope.resolvedOptions = $scope.options;
                     updateSelectionLists();
                 };
 
                 $ngModelCtrl.$viewChangeListeners.push(function () {
+                    $scope.resolvedOptions = $scope.options;
                     updateSelectionLists();
                 });
 
