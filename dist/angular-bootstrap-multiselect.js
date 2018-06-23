@@ -55,7 +55,7 @@
                     $scope.disabled = true;
                 }
 
-                if(typeof $scope.getIdProp == 'undefined'){
+                if (typeof $scope.getIdProp == 'undefined') {
                     $scope.getIdProp = false;
                 }
 
@@ -115,7 +115,7 @@
                 };
 
                 var watcher = $scope.$watch('selectedOptions', function () {
-                    if($scope.selectedOptions != undefined && $scope.getIdProp){
+                    if ($scope.selectedOptions != undefined && $scope.getIdProp) {
 
                         var selectedArray = [];
                         selectedArray = $scope.selectedOptions.map(function (el) {
@@ -123,7 +123,7 @@
                         });
 
                         $ngModelCtrl.$setViewValue(angular.copy(selectedArray));
-                    }else{
+                    } else {
                         $ngModelCtrl.$setViewValue(angular.copy($scope.selectedOptions));
                     }
                 }, true);
