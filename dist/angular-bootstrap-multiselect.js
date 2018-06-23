@@ -30,7 +30,8 @@
                 labels: '=?',
                 classesBtn: '=?',
                 showTooltip: '=?',
-                placeholder: '@?'
+                placeholder: '@?',
+                getIdProp: '=?'
             },
             require: 'ngModel',
             templateUrl: 'multiselect.html',
@@ -54,6 +55,9 @@
                     $scope.disabled = true;
                 }
 
+                if(typeof $scope.getIdProp == 'undefined'){
+                    $scope.getIdProp = false;
+                }
 
                 var closeHandler = function (event) {
                     if (!$element[0].contains(event.target)) {
@@ -111,7 +115,17 @@
                 };
 
                 var watcher = $scope.$watch('selectedOptions', function () {
-                    $ngModelCtrl.$setViewValue(angular.copy($scope.selectedOptions));
+                    if($scope.selectedOptions != undefined && $scope.getIdProp){
+
+                        var selectedArray = [];
+                        selectedArray = $scope.selectedOptions.map(function (el) {
+                            return $scope.getId(el);
+                        });
+
+                        $ngModelCtrl.$setViewValue(angular.copy(selectedArray));
+                    }else{
+                        $ngModelCtrl.$setViewValue(angular.copy($scope.selectedOptions));
+                    }
                 }, true);
 
                 $scope.$on('$destroy', function () {
