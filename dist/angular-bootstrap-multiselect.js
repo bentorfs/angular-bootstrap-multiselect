@@ -43,6 +43,7 @@
                 $scope.selectionLimit = $scope.selectionLimit || 0;
                 $scope.searchLimit = $scope.searchLimit || 25;
 
+
                 $scope.searchFilter = '';
 
                 $scope.resolvedOptions = [];
@@ -120,20 +121,29 @@
                         watcher(); // Clean watcher
                     }
                 });
-
+                // Rong add process pre-fill data to display text content
+                function getReturnText(items){
+                  var totalSelected = angular.isDefined(items) ? items.length : 0;
+                  if (totalSelected === 0) {
+                    return $scope.labels && $scope.labels.select ? $scope.labels.select : ($scope.placeholder || 'Select');
+                  } else {
+                    return totalSelected + ' ' + ($scope.labels && $scope.labels.itemsSelected ? $scope.labels.itemsSelected : 'selected');
+                  }
+                }
                 $scope.getButtonText = function () {
                     if ($scope.selectedOptions && $scope.selectedOptions.length === 1) {
-                        return $scope.getDisplay($scope.selectedOptions[0]);
-                    }
-                    if ($scope.selectedOptions && $scope.selectedOptions.length > 1) {
-                        var totalSelected = angular.isDefined($scope.selectedOptions) ? $scope.selectedOptions.length : 0;
-                        if (totalSelected === 0) {
-                            return $scope.labels && $scope.labels.select ? $scope.labels.select : ($scope.placeholder || 'Select');
-                        } else {
-                            return totalSelected + ' ' + ($scope.labels && $scope.labels.itemsSelected ? $scope.labels.itemsSelected : 'selected');
-                        }
+                      return $scope.getDisplay($scope.selectedOptions[0]);
+                    }else if($scope.selectedOptions && $scope.selectedOptions.length == 0 && $ngModelCtrl.$viewValue && $ngModelCtrl.$viewValue.length == 1){
+                      // Rong add process pre-fill data to display text content
+                      return $scope.getDisplay($ngModelCtrl.$viewValue[0]);
+                    } // if
+
+                    if($scope.selectedOptions && $scope.selectedOptions.length > 1){
+                      return getReturnText($scope.selectedOptions)
+                    }else if($ngModelCtrl.$viewValue && $ngModelCtrl.$viewValue.length > 1){ // Rong add process pre-fill data to display text content
+                      return getReturnText($ngModelCtrl.$viewValue)
                     } else {
-                        return $scope.labels && $scope.labels.select ? $scope.labels.select : ($scope.placeholder || 'Select');
+                      return $scope.labels && $scope.labels.select ? $scope.labels.select : ($scope.placeholder || 'Select');
                     }
                 };
 
@@ -156,10 +166,23 @@
                     if (currentlySelected) {
                         $scope.unselectedOptions.push($scope.selectedOptions[selectedIndex]);
                         $scope.selectedOptions.splice(selectedIndex, 1);
-                    } else if (!currentlySelected && ($scope.selectionLimit === 0 || $scope.selectedOptions.length < $scope.selectionLimit)) {
-                        var unselectedIndex = $scope.unselectedOptions.indexOf(item);
-                        $scope.unselectedOptions.splice(unselectedIndex, 1);
-                        $scope.selectedOptions.push(item);
+                    } else if (!currentlySelected && ($scope.selectionLimit === 0 || $scope.selectedOptions.length < $scope.selectionLimit || $scope.selectionLimit == 1)) {
+                        // Rong add if selectionLimit == 1 is the user maybe need swap items
+                        if($scope.selectionLimit == 1){
+                          $scope.selectedOptions = [item];
+                        }else{
+                          var unselectedIndex = $scope.unselectedOptions.indexOf(item);
+                          $scope.unselectedOptions.splice(unselectedIndex, 1);
+                          $scope.selectedOptions.push(item);
+                        }
+
+                        // type only number, but not input string
+                        if(typeof($scope.selectionLimit) == 'number'){
+                          var _length = $scope.selectedOptions.length;
+                          if($scope.selectionLimit == _length){
+                            $scope.open = false;
+                          } // if
+                        } // if
                     }
                 };
 
@@ -251,7 +274,8 @@ angular.module("multiselect.html", []).run(["$templateCache", function ($templat
     "        {{getButtonText()}}&nbsp;<span class=\"caret\"></span>\n" +
     "    </button>\n" +
     "    <ul class=\"dropdown-menu dropdown-menu-form\"\n" +
-    "        ng-style=\"{display: open ? 'block' : 'none'}\" style=\"width: 100%; overflow-x: auto\">\n" +
+    // "        ng-style=\"{display: open ? 'block' : 'none'}\" style=\"width: 100%; overflow-x: auto\">\n" +
+    "        ng-style=\"{display: open ? 'block' : 'none'}\" style=\"overflow-x: auto\">\n" +
     "\n" +
     "        <li ng-show=\"showSelectAll\">\n" +
     "            <a ng-click=\"selectAll()\" href=\"\">\n" +
@@ -285,8 +309,8 @@ angular.module("multiselect.html", []).run(["$templateCache", function ($templat
     "        <li ng-show=\"showSearch\" class=\"divider\"></li>\n" +
     "        <li role=\"presentation\" ng-repeat=\"option in unselectedOptions | filter:search() | limitTo: searchLimit\"\n" +
     "            ng-if=\"!isSelected(option)\"\n" +
-    "            ng-class=\"{disabled : selectionLimit && selectedOptions.length >= selectionLimit}\">\n" +
-    "            <a class=\"item-unselected\" href=\"\" title=\"{{showTooltip ? getDisplay(option) : ''}}\" ng-click=\"toggleItem(option); $event.stopPropagation()\" style=\"overflow-x: hidden;text-overflow: ellipsis\">\n" +
+    "            ng-class=\"{disabled : selectionLimit && selectionLimit != 1 && selectedOptions.length >= selectionLimit}\">\n" +
+    "            <a class=\"item-unselected\" href=\"\" ng-class=\"{{option.customClass}}\" title=\"{{showTooltip ? getDisplay(option) : ''}}\" ng-click=\"toggleItem(option); $event.stopPropagation()\" style=\"overflow-x: hidden;text-overflow: ellipsis\">\n" +
     "                {{getDisplay(option)}}\n" +
     "            </a>\n" +
     "        </li>\n" +
