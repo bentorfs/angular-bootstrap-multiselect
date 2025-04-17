@@ -46,7 +46,7 @@
                 $scope.searchFilter = '';
 
                 $scope.resolvedOptions = [];
-                if (typeof $scope.options !== 'function') {
+                if ($scope.options && typeof $scope.options !== 'function') {
                     $scope.resolvedOptions = $scope.options;
                 }
 
