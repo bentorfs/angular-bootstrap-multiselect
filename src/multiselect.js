@@ -29,6 +29,7 @@
                 disabled: '=?ngDisabled',
                 labels: '=?',
                 classesBtn: '=?',
+                styleBtn: '=?',
                 showTooltip: '=?',
                 placeholder: '@?'
             },
@@ -37,6 +38,9 @@
             controller: function($scope) {
                 if (angular.isUndefined($scope.classesBtn)) {
                     $scope.classesBtn = ['btn-block','btn-default'];
+                }
+                if (angular.isUndefined($scope.styleBtn)) {
+                    $scope.styleBtn = {};
                 }
             },
             link: function ($scope, $element, $attrs, $ngModelCtrl) {
